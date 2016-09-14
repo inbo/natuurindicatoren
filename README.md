@@ -39,3 +39,12 @@ The repo structure is based on [cookiecutter-data-science](https://github.com/dr
         |
         ├── europese-vlinderindex-graslanden.Rmd 
         └── aantal-verkochte-visverloven.Rmd
+
+## Rendering
+
+In order to make the rendering of the `.Rmd` file to the proper reports/html folder, use the rmarkdwon `render` function instead of the knitr-button, as follows (for the vlinderindex example):
+
+```R
+rmarkdown::render("europese-vlinderindex-graslanden.Rmd", output_file = "../reports/html/europese-vlinderindex-graslanden.html") 
+```
+
