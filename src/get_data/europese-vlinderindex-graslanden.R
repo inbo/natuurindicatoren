@@ -35,5 +35,6 @@ tidy.df$year <- as.numeric(as.character(tidy.df$year))
 
 # save as CSV in processed folder
 write.csv(tidy.df,
-          file = "../data/processed/europese-vlinderindex-graslanden.csv")
+          file = "../data/processed/europese-vlinderindex-graslanden.csv",
+          row.names = FALSE)
 
