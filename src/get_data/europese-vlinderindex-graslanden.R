@@ -20,10 +20,9 @@ df <- data.url %>%
 # remove rows with only NA values (or just a single value)
 df <- df[rowSums(is.na(df)) < dim(df)[2] - 1,]
 # remove redundant year and soort/year rows
-df <- filter(df, !Soort %in% c('Soort', 'Jaar'))
-# extract the 'doel MINA-plan 4'
-#MINA_plan_4_value <- as.numeric(df[df$Soort == "doel MINA-plan 4", "2015"])
-
+# Hooibeestje and Argusvlinder are duplicated in the rows
+df <- filter(df, !Soort %in% c('Soort', 'Jaar',
+                               'Hooibeestje', 'Argusvlinder'))
 # make tidy
 tidy.df <- melt(df, id.vars = "Soort",
            value.name = "grasland_index",
