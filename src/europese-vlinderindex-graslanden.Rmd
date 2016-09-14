@@ -12,8 +12,7 @@ library(ggplot2)
 library(dplyr)
 library(INBOtheme)
 
-df <- "../data/processed/europese-vlinderindex-graslanden.csv" %>%
-        read.csv()
+df <- read.csv("../data/processed/europese-vlinderindex-graslanden.csv")
 ```
 
 ## Definitie
