@@ -8,9 +8,9 @@ keyword: visualisation, nara, indicators
 ```{r, include=FALSE}
 # cfr. https://www.inbo.be/nl/natuurindicator/europese-vlinderindex-graslanden
 
-require(ggplot2)
+library(ggplot2)
 library(dplyr)
-require(INBOtheme)
+library(INBOtheme)
 
 df <- "../data/processed/europese-vlinderindex-graslanden.csv" %>%
         read.csv()
