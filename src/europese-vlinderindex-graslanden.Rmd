@@ -57,7 +57,7 @@ ggplot(data_plot2, aes(x = year, y = grasland_index,
                   legend.text = element_text(size = 14),
                   text = element_text(12)) + 
             ylab("Graslandvlinder Index (100% defines situation in 1991)") +
-            scale_x_continuous(pretty(data_plot2$year, n = 5))
+            scale_x_continuous(pretty(data_plot2$year, n = 5), name = "")
 ```
 
 
@@ -92,8 +92,7 @@ ggplot(data_plot3, aes(x = year, y = grasland_index)) +
                   legend.text = element_text(size = 14),
                   text = element_text(12)) + 
             ylab("Graslandvlinder Index (100% defines situation in 1991)") +
-            scale_x_continuous(pretty(data_plot3$year, n = 5)) +
-            xlab("")
+            scale_x_continuous(pretty(data_plot3$year, n = 5), name = "")
 
 ```
 
