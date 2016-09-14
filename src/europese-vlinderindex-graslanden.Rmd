@@ -12,6 +12,8 @@ library(ggplot2)
 library(dplyr)
 library(INBOtheme)
 
+figure.location <- "../reports/figures"
+
 df <- read.csv("../data/processed/europese-vlinderindex-graslanden.csv")
 ```
 
@@ -38,7 +40,10 @@ ggplot(data_plot1, aes(x = year, y = grasland_index,
             ylab("Graslandvlinder Index (100% defines situation in 1991)") + 
             scale_x_continuous(pretty(data_plot1$year, n = 5), name = "")
 
+ggsave(paste(figure.location, "europese-vlinderindex-graslanden-1.png", sep = "/"))
 ```
+
+![](../reports/figures/europese-vlinderindex-graslanden-1.png)
 
 ## Focus op de evolutie van Argusvlinder en Hooibeestje
 
@@ -57,6 +62,8 @@ ggplot(data_plot2, aes(x = year, y = grasland_index,
                   text = element_text(12)) + 
             ylab("Graslandvlinder Index (100% defines situation in 1991)") +
             scale_x_continuous(pretty(data_plot2$year, n = 5), name = "")
+
+ggsave(paste(figure.location, "europese-vlinderindex-graslanden-2.png", sep = "/"))
 ```
 
 
@@ -93,6 +100,7 @@ ggplot(data_plot3, aes(x = year, y = grasland_index)) +
             ylab("Graslandvlinder Index (100% defines situation in 1991)") +
             scale_x_continuous(pretty(data_plot3$year, n = 5), name = "")
 
+ggsave(paste(figure.location, "europese-vlinderindex-graslanden-3.png", sep = "/"))
 ```
 
 ## Bespreking
