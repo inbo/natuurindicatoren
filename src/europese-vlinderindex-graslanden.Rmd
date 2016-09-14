@@ -1,0 +1,127 @@
+---
+title: "Europese vlinderindex (graslanden)"
+output: html_document
+keyword: visualisation, nara, indicators
+---
+
+
+```{r, include=FALSE}
+# cfr. https://www.inbo.be/nl/natuurindicator/europese-vlinderindex-graslanden
+
+require(gdata)
+require(ggplot2)
+require(reshape2)
+require(INBOtheme)
+
+df = read.xls("Graslandvlinderindex_data2016_web.xlsx", sheet = 1, header = TRUE)
+rownames(df) <- df$Soort
+df$Soort <- NULL
+colnames(df) <- substring(colnames(df), first = 2)
+
+```
+
+## Definitie
+
+In het kader van SEBI 2010-doelstellingen ontwikkelde de Nederlandse Vlinderstichting een Europese index voor graslandvlinders, gebaseerd op 7 wijdverspreide (argusvlinder, bruin zandoogje, groot dikkopje, hooibeestje, icarusblauwtje, kleine vuurvlinder en oranjetipje) en 10 zeldzame graslandvlinders (adonisblauwtje, bleek blauwtje, bruin dikkopje, donker pimpernelblauwtje, dwergblauwtje, dwergdikkopje, kalkgraslanddikkopje, klaverblauwtje, moerasparelmoervlinder en tijmblauwtje - van Swaay et al. 2015). In Vlaanderen zijn enkel voldoende gegevens beschikbaar voor 5 wijdverspreide soorten: bruin zandoogje, groot dikkopje, icarusblauwtje, kleine vuurvlinder en oranjetipje. De index geeft de veranderingen tussen jaren aan waarbij het referentiejaar 1992 op 100 werd gezet.
+
+## Evolutie van de afzonderlijke soorten
+
+```{r, echo=FALSE, fig.width=10, fig.height=14}
+data_plot1 = df[1:7,]
+data_plot1 <- tibble::rownames_to_column(data_plot1)
+data_plot1 <- melt(data_plot1, id.vars = "rowname", 
+                   value.name = "index", 
+                   variable.name = "year")
+data_plot1$year <- as.numeric(as.character(data_plot1$year))
+ggplot(data_plot1, aes(x = year, y = index,
+                       group = rowname)) +
+            geom_point() +
+            geom_line() +
+            facet_grid(rowname ~ . , scales = "free") +
+            geom_hline(yintercept = 100, 
+                       color = INBOdarkgreen, 
+                       linetype = 2) +
+            theme(strip.text.y = element_text(size = 13),
+                  text = element_text(12)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") +
+            scale_x_continuous(pretty(data_plot1$year, n = 5))
+
+```
+
+## Evolutie van de vlinderindex
+
+```{r, echo=FALSE, fig.width=10, fig.height=10}
+data_plot2 = df[9:10,]
+data_plot2 <- tibble::rownames_to_column(data_plot2)
+data_plot2 <- melt(data_plot2, id.vars = "rowname", 
+                   value.name = "index", 
+                   variable.name = "year")
+data_plot2$year <- as.numeric(as.character(data_plot2$year))
+ggplot(data_plot2, aes(x = year, y = index*100,
+                       group = rowname, colour = rowname)) +
+            geom_point() +
+            geom_line() +
+            geom_hline(yintercept = 100, 
+                       color = INBOdarkgreen, 
+                       linetype = 2) +
+            theme(legend.title = element_blank(),
+                  legend.position = "top",
+                  legend.text = element_text(size = 14),
+                  text = element_text(12)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") +
+            scale_x_continuous(pretty(data_plot2$year, n = 5))
+```
+
+
+## Evolutie van Argusvlinder en Hooibeestje
+
+```{r, echo=FALSE, fig.width=12, fig.height=10}
+data_plot3 <- df[13,]
+MINA_plan_4_value <- df["doel MINA-plan 4", "2015"]
+
+data_plot3 <- melt(data_plot3,
+                   value.name = "index", 
+                   variable.name = "year",
+                   variable.factor = FALSE)
+data_plot3$year <- as.numeric(as.character(data_plot3$year))
+ggplot(data_plot3, aes(x = year, y = index)) +
+            geom_point() +
+            geom_line(aes(colour = "Graslandvlinder Index")) +
+            geom_hline(yintercept = 100, 
+                       linetype = 2,
+                       color = INBOdarkgreen) +
+            annotate("text", 
+                     x = min(data_plot3$year) + 0.5, 
+                     y = 100 - 2,
+                     label = "referentie 1991",
+                     color = INBOdarkgreen,
+                     size = 5) +    
+            geom_hline(yintercept = MINA_plan_4_value, 
+                       linetype = 2,
+                       color = INBOreddishbrown) + 
+            annotate("text", x = max(data_plot3$year) - 1, 
+                     MINA_plan_4_value + 2, 
+                     label = "doel MINA plan 4",
+                     color = INBOreddishbrown,
+                     size = 5) +
+            theme(legend.title = element_blank(),
+                  legend.position = "top",
+                  legend.text = element_text(size = 14),
+                  text = element_text(12)) + 
+            ylab("Graslandvlinder Index (100% defines situation in 1991)") +
+            scale_x_continuous(pretty(data_plot3$year, n = 5)) +
+            xlab("")
+
+```
+
+## Bespreking
+
+De Vlaamse graslandvlinderindex vertoont een wisselend verloop. De samengestelde indicator daalt licht gedurende de eerste 10 jaar van de monitoring maar schommelt sindsdien sterk. Twee soorten dalen beduidend (bruin zandoogje en groot dikkopje), twee soorten blijven stabiel (icarusblauwtje en kleine vuurvlinder) en een soort (oranjetipje) neemt beduidend toe. Voor de overige twee soorten (argusvlinder en hooibeestje) zijn er relatief weinig vlinderroutes. Het hooibeestje lijkt min of meer stabiel te blijven, maar de argusvlinder toont een bijzonder sterke achteruitgang (Van Dyck et al. 2015).
+
+## Beleidsdoelen
+
+* Streefdoel 2 EU 2020 biodiversiteitsstrategie:Tegen 2020 worden ecosystemen en ecosysteemdiensten gehandhaafd en verbeterd door groene infrastructuur op te zetten en ten minste 15 % van de aangetaste ecosystemen te herstellen.
+* Plandoelstelling MINA-plan 4: In 2015 is de toestand van bedreigde en beschermde soortengroepen verbeterd: + 10% t.o.v. 2004.
+* PACT2020 15.1 Inzake biodiversiteit kan Vlaanderen in 2020 de vergelijking met de Europese economische topregio's aan.
+* SEBI 01 Abundance and distribution of selected species
+
