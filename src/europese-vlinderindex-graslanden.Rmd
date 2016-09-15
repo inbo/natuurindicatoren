@@ -1,5 +1,7 @@
 ---
 title: "Europese vlinderindex (graslanden)"
+author: "Stijn Van Hoey"
+date: "September 13, 2016"
 output: html_document
 keyword: visualisation, nara, indicators
 ---
