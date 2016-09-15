@@ -8,6 +8,7 @@ keyword: visualisation, nara, indicators
 
 ```{r, include=FALSE}
 # cfr. https://www.inbo.be/nl/natuurindicator/europese-vlinderindex-graslanden
+# To render, run rmarkdown::render("rodelijst-zoetwater.Rmd", output_file = "../reports/html/rodelijst-zoetwater.html")
 
 library(ggplot2)
 library(INBOtheme)
@@ -21,6 +22,16 @@ Rode Lijsten geven aan hoe groot de kans is dat een soort zal uitsterven in Vlaa
 ## Zoetwatervissen Rode lijst
 
 ```{r, echo=FALSE, fig.width=12, fig.height=10}
+
+df$categorie <- factor(df$categorie, ordered = TRUE,
+                       levels = c("momenteel niet in gevaar",
+                                  "kwetsbaar",
+                                  "bijna in gevaar",
+                                  "bedreigd",
+                                  "ernstig bedreigd",
+                                  "regionaal uitgestorven",
+                                  "onvoldoende data"))
+
 ggplot(df, aes(x = categorie)) +
     geom_bar(stat = "identity", aes(y = aantal)) + 
     xlab("") +

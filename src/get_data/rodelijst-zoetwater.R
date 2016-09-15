@@ -17,7 +17,16 @@ colnames(df) <- c("categorie", "aantal")
 df$aantal <- as.numeric(as.character(df$aantal))
 
 # sort towards the number of species
-#.df <- df[order(df$aantal),]
+df <- df[order(df$aantal),]
+
+df$categorie <- factor(df$categorie, ordered = TRUE,
+                       levels = c("momenteel niet in gevaar",
+                                  "kwetsbaar",
+                                  "bijna in gevaar",
+                                  "bedreigd",
+                                  "ernstig bedreigd",
+                                  "regionaal uitgestorven",
+                                  "onvoldoende data"))
 
 
 write.csv(df,
