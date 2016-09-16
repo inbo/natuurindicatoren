@@ -9,7 +9,7 @@ library(gdata)
 
 # Read the data file
 df = read.xls("~/projecten/2016_natuurindicatoren/prototypes/rodelijst_zoetwatervissen/RodeLijstZoetwatervissen_excel_2012_figHDM.xlsx",
-              sheet = 1, header = FALSE, skip = 2)
+              sheet = 2, header = FALSE, skip = 2)
 
 # define column names manually
 colnames(df) <- c("categorie", "aantal")
