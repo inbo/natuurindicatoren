@@ -46,7 +46,23 @@ checklist_pathway <- checklist_splitted %>%
 checklist_pathway$kingdom <- as.character(checklist_pathway$kingdom)
 pathway_count <- checklist_pathway  %>%
                     filter(kingdom %in% c('Plantae', 'Animalia')) %>%
-                    count(introductionPathway, category, subcategory, kingdom)
+                    count(vars = c("introductionPathway", "category",
+                                   "subcategory", "kingdom"))
+
+# hardcoding the translation  of categories as additional column
+pathway_count$category_nl <- revalue(pathway_count$category,
+                                    c("contaminant" = "TRANSPORTBESMETTING",
+                                      "corridor" = "CORRIDOR",
+                                      "escape" = "ONTSNAPPING",
+                                      "release" = "UITZETTEN IN DE NATUUR",
+                                      "stowaway" = "TRANSPORT VERSTEKELING",
+                                      "to be determined by experts" = "TE BEPALEN DOOR EXPERTEN",
+                                      "unaided" = "AUTONOME UITBREIDING",
+                                      "unknown" = "ONBEKEND"))
+
+## DUTCH TRANSLATION OF PATHWAY -> if subcategories needed as well
+#pathway_en_nl <- read.csv("../data/vocabularies/pathways_CBD_en_nl.csv",
+#                          sep = "\t")
 
 write.csv(pathway_count,
           file = "../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv",
