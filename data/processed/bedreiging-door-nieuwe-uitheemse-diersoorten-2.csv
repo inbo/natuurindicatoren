@@ -1,0 +1,61 @@
+"habitat_name","period_sections","freq","cumcount"
+"estuarine",1800,NA,NA
+"estuarine",1815,NA,NA
+"estuarine",1830,NA,NA
+"estuarine",1845,NA,NA
+"estuarine",1860,NA,NA
+"estuarine",1875,NA,NA
+"estuarine",1890,NA,NA
+"estuarine",1905,NA,NA
+"estuarine",1920," 3",3
+"estuarine",1935," 1",4
+"estuarine",1950," 1",4
+"estuarine",1965," 1",5
+"estuarine",1980," 4",9
+"estuarine",1995," 7",16
+"estuarine",2010," 7",16
+"freshwater",1800,NA,NA
+"freshwater",1815,NA,NA
+"freshwater",1830,NA,NA
+"freshwater",1845," 1",1
+"freshwater",1860," 1",2
+"freshwater",1875," 5",7
+"freshwater",1890," 5",7
+"freshwater",1905," 2",9
+"freshwater",1920," 4",13
+"freshwater",1935," 2",15
+"freshwater",1950," 5",20
+"freshwater",1965,"10",30
+"freshwater",1980,"19",49
+"freshwater",1995," 8",57
+"freshwater",2010," 8",57
+"marine",1800,NA,NA
+"marine",1815,NA,NA
+"marine",1830," 1",1
+"marine",1845," 1",2
+"marine",1860," 1",2
+"marine",1875," 2",4
+"marine",1890," 3",7
+"marine",1905," 2",9
+"marine",1920," 3",12
+"marine",1935," 6",18
+"marine",1950," 6",24
+"marine",1965," 7",31
+"marine",1980," 8",39
+"marine",1995,"37",76
+"marine",2010," 3",79
+"terrestrial",1800," 2",2
+"terrestrial",1815," 2",4
+"terrestrial",1830," 1",5
+"terrestrial",1845," 3",8
+"terrestrial",1860," 6",14
+"terrestrial",1875," 7",21
+"terrestrial",1890," 5",26
+"terrestrial",1905," 2",28
+"terrestrial",1920," 3",31
+"terrestrial",1935," 6",37
+"terrestrial",1950," 6",43
+"terrestrial",1965," 4",47
+"terrestrial",1980," 4",51
+"terrestrial",1995," 6",57
+"terrestrial",2010," 6",57
