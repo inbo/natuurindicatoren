@@ -80,6 +80,9 @@ write.csv(pathway_count,
 # however, this is should be tackled by Adriaens T.
 # for now, coercing whatever can be interpreted well:
 checklist$firstObservationYearBE <- as.numeric(as.character(checklist$firstObservationYearBE))
+# only use values with year
+checklist <- checklist[!is.na(checklist$firstObservationYearBE),]
+
 
 habitats = c("freshwater", "marine", "estuarine", "terrestrial")
 
@@ -147,6 +150,11 @@ checklist_count_all <- ddply(checklist_count_all, .(habitat_name), na.locf)
 checklist_count_all$cumcount <- as.numeric(checklist_count_all$cumcount)
 checklist_count_all$period_sections <- as.numeric(checklist_count_all$period_sections)
 
+checklist_count_all$habitat_name_nl <- revalue(checklist_count_all$habitat_name,
+                                              c("estuarine" = "estuarien",
+                                                "freshwater" = "zoetwater",
+                                                "marine" = "marien",
+                                                "terrestrial" = "terrestrisch"))
 write.csv(checklist_count_all,
           file = "../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv",
           row.names = FALSE)

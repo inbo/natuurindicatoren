@@ -124,6 +124,7 @@ ggplot(df_pathway,  aes(x = reorder(category_nl, freq, function(x){sum(x)}),
 
 ## Cumulative number of species in time
 
+English version
 ```{r, echo=FALSE, fig.width=9, fig.height=14, warning = FALSE, message = FALSE}
 
 ggplot(data = df_count, aes(x = period_sections, 
@@ -134,6 +135,21 @@ ggplot(data = df_count, aes(x = period_sections,
                 scale_x_discrete(labels = seq(1800, 2030, 15)) +
                 xlab("") +
                 ylab("Number of alien species") +
+                theme(strip.text.y = element_text(size = 16)) +
+                scale_x_continuous(breaks = seq(1800, 2010, 50))
+```
+
+Dutch version
+```{r, echo=FALSE, fig.width=9, fig.height=14, warning = FALSE, message = FALSE}
+
+ggplot(data = df_count, aes(x = period_sections, 
+                            y = cumcount)) +
+                geom_bar(stat = "identity") +
+                theme_inbo2015(base_size = 14) +
+                facet_grid(habitat_name_nl ~ .) +
+                scale_x_discrete(labels = seq(1800, 2030, 15)) +
+                xlab("") +
+                ylab("Aantal uitheemse diersoorten") +
                 theme(strip.text.y = element_text(size = 16)) +
                 scale_x_continuous(breaks = seq(1800, 2010, 50))
 ```
