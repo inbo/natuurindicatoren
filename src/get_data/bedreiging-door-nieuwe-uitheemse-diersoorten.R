@@ -65,7 +65,7 @@ pathway_count$category_nl <- revalue(pathway_count$category,
 #                          sep = "\t")
 
 write.csv(pathway_count,
-          file = "../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv",
+          file = "data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv",
           row.names = FALSE)
 
 ## CUMULATIVE COUNT OVER YEARS
@@ -156,5 +156,5 @@ checklist_count_all$habitat_name_nl <- revalue(checklist_count_all$habitat_name,
                                                 "marine" = "marien",
                                                 "terrestrial" = "terrestrisch"))
 write.csv(checklist_count_all,
-          file = "../data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv",
+          file = "data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv",
           row.names = FALSE)
