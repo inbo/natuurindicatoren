@@ -1,0 +1,27 @@
+---
+title: "Natuurindicatoren"
+author: "Yasmine Verzelen"
+date: "24 oktober 2017"
+output: html_document
+---
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
