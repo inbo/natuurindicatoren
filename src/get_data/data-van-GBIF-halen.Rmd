@@ -13,12 +13,23 @@ library(rgbif)
 library(curl)
 ```
 
-Number of records in a particular dataset
+Number of records in Waarnemingen.be datasets
 ```{r}
+'Plants'
+occ_count(datasetKey='7f5e4129-0717-428e-876a-464fbd5d9a47')
+'Animals'
 occ_count(datasetKey='9a0b66df-7535-4f28-9f4e-5bc11b8b096c')
-```
 
+```
+Get the data from the datasets
 ```{r}
+'Animals'
+WnmBe_Animals <- occ_download_get(key = "0006839-171025204727650", overwrite = TRUE) %>% 
+    occ_download_import(WnmBe_Animals_download, na.strings = c("", NA))
+
+'Plants'
+WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TRUE) %>% 
+    occ_download_import(WnmBe_Plants_download, na.strings = c("", NA))
 
 ```
 
