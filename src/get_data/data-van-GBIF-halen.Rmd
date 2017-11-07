@@ -5,20 +5,17 @@ date: "24 oktober 2017"
 output: html_document
 ---
 
-```{r}
+In dit script willen we de data van waarnemingen.be van GBIF halen, voor niet-inheemse planten en dieren.
 
+Load packages
+```{r}
+library(rgbif)
+library(curl)
 ```
 
+Number of records in a particular dataset
 ```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
+occ_count(datasetKey='9a0b66df-7535-4f28-9f4e-5bc11b8b096c')
 ```
 
 ```{r}
