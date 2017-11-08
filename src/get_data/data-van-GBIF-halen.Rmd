@@ -33,3 +33,45 @@ WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TR
 
 ```
 
+Merge the datasets
+```{r}
+WnmBe_All <- rbind(WnmBe_Animals, WnmBe_Plants)
+```
+Calculate the first occurence per species
+```{r}
+species <- unique(WnmBe_All$species)
+species_list <- data.frame()
+for(s in species){
+  temp <- subset(WnmBe_All, species == s)
+  temp2 <- data.frame(s)
+  temp2$firstyear <- min(temp$year)
+  species_list <- rbind(species_list, temp2)
+}
+
+remove(temp)
+remove(temp2)
+
+```
+
+Calculate cumulative number of invasive species
+```{r}
+
+firstrecord <- min(species_list$firstyear)
+newestrecord <- max(unique(WnmBe_All$year))
+tijdspanne <- newestrecord-firstrecord
+
+cum_species <- data.frame()
+temp2 <- data.frame(1)
+t <- firstrecord
+
+for(i in 1:tijdspanne){
+  temp <- subset(species_list, firstyear == t)
+  temp2$n <- nrow(temp)
+  temp2$t <- t
+  cum_species <- rbind(cum_species, temp2)
+  t <- t + 1
+}
+
+
+```
+
