@@ -26,6 +26,7 @@ Get the data from the datasets
 'Animals'
 WnmBe_Animals <- occ_download_get(key = "0006839-171025204727650", overwrite = TRUE) %>% 
     occ_download_import(WnmBe_Animals_download, na.strings = c("", NA))
+WnmBe_Animals$species <- as.character(WnmBe_Animals$species)
 
 'Plants'
 WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TRUE) %>% 
@@ -39,6 +40,7 @@ WnmBe_All <- rbind(WnmBe_Animals, WnmBe_Plants)
 ```
 Calculate the first occurence per species
 ```{r}
+WnmBe_All <- subset(WnmBe_All, !is.na(species))
 species <- unique(WnmBe_All$species)
 species_list <- data.frame()
 for(s in species){
@@ -58,9 +60,9 @@ Calculate cumulative number of invasive species
 
 firstrecord <- min(species_list$firstyear)
 newestrecord <- max(unique(WnmBe_All$year))
-tijdspanne <- newestrecord-firstrecord
+tijdspanne <- (newestrecord-firstrecord)+1
 
-cum_species <- data.frame()
+new_species <- data.frame()
 temp2 <- data.frame(1)
 t <- firstrecord
 
@@ -68,10 +70,12 @@ for(i in 1:tijdspanne){
   temp <- subset(species_list, firstyear == t)
   temp2$n <- nrow(temp)
   temp2$t <- t
-  cum_species <- rbind(cum_species, temp2)
+  new_species <- rbind(new_species, temp2)
   t <- t + 1
 }
 
+new_species$X1 <- NULL
+new_species$cumul <- cumsum(new_species$n)
 
 ```
 
