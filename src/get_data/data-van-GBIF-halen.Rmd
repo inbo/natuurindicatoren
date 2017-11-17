@@ -101,27 +101,24 @@ temp2 <- data.frame(1)
 temp3 <- data.frame(1)
 t <- firstrecord
 
-for(i in 1:tijdspanne){
-  temp <- subset(species_list, firstyear == t)
-  kingdoms <- unique(temp$kingdom)
-  for(k in kingdoms){
-  temp2 <- subset(temp, kingdom == k)
-  temp3$n <- nrow(temp2)
-  temp3$t <- t
-  temp3$kingdom <- k
-  new_species_k <- rbind(new_species_k, temp3)
-  
+kingdoms <- unique(species_list$kingdom)
+for(k in kingdoms){
+  temp <- subset(species_list, kingdom == k)
+  for(i in 1:tijdspanne){
+    temp2 <- subset(temp, firstyear == t)
+    temp3$n <- nrow(temp2)
+    temp3$t <- t
+    temp3$kingdom <- k
+    new_species_k <- rbind(new_species_k, temp3)
+    t <- t + 1
   }
-  t <- t + 1
-  }
-
-
-#Om de een of andere reden vult het bovenstaande script de tijdspanne niet volledig aan. Enkel jaren met nieuwe soorten worden aangevuld. => stuk script toevoegen om aan de vullen 
+  t <- firstrecord
+}
 
 new_species_k$X1 <- NULL
-new_species_k$cumul <- transform(new_species_k, kingdom = ave(n , kingdom, FUN = cumsum))
+new_species_k2 <-  transform(new_species_k,cumul = ave(n , kingdom, FUN = cumsum))
 
-plot <- ggplot(new_species_k, aes(x = t, y=cumul), colour= kingdom)+
+plot <- ggplot(new_species_k2, aes(x = t, y=cumul,colour=kingdom))+
   scale_x_continuous(breaks = seq(1800, 2017, 10))+
   geom_line()
 
