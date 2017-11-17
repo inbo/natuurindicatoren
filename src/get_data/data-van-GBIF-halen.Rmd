@@ -39,8 +39,6 @@ WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TR
 Merge the datasets
 ```{r}
 WnmBe_All <- rbind(WnmBe_Animals, WnmBe_Plants)
-write.csv2(WnmBe_All, "WnmBe_All.csv")
-WnmBe_All <- read.csv2(file = "WnmBe_All.csv", header = TRUE)
 ```
 Calculate the first occurence per species
 ```{r}
