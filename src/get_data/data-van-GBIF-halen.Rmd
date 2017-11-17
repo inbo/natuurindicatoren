@@ -49,8 +49,9 @@ for(s in species){
   temp <- subset(WnmBe_All, species == s)
   temp2 <- data.frame(s)
   temp2$firstyear <- min(temp$year)
-  temp2$Kingdom <- unique(temp$kingdom)
-  temp2$
+  temp2$kingdom <- unique(temp$kingdom)
+  temp2$phylum <- unique(temp$phylum)
+  temp2$class <- unique(temp$class)
   species_list <- rbind(species_list, temp2)
 }
 
