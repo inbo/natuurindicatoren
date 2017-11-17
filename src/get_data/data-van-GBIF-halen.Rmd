@@ -39,6 +39,8 @@ WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TR
 Merge the datasets
 ```{r}
 WnmBe_All <- rbind(WnmBe_Animals, WnmBe_Plants)
+write.csv2(WnmBe_All, "WnmBe_All.csv")
+WnmBe_All <- read.csv2(file = "WnmBe_All.csv", header = TRUE)
 ```
 Calculate the first occurence per species
 ```{r}
@@ -89,7 +91,7 @@ print(plot)
 
 ```
 
-Caculate the cumulative number of invasive species per kingdom and total and display in a graph
+Calculate the cumulative number of invasive species per kingdom and total and display in a graph
 ```{r}
 
 firstrecord <- min(species_list$firstyear)
@@ -121,8 +123,9 @@ for(i in 1:tijdspanne){
 new_species_k$X1 <- NULL
 new_species_k$cumul <- transform(new_species_k, kingdom = ave(n , kingdom, FUN = cumsum))
 
-plot <- ggplot(new_species_k, aes(x = t, y=cumul, colour= kingdom))
-plot <- plot + geom_line()
+plot <- ggplot(new_species_k, aes(x = t, y=cumul), colour= kingdom)+
+  scale_x_continuous(breaks = seq(1800, 2017, 10))+
+  geom_line()
 
 print(plot)
 
