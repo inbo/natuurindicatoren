@@ -83,8 +83,9 @@ for(i in 1:tijdspanne){
 new_species$X1 <- NULL
 new_species$cumul <- cumsum(new_species$n)
 
-plot <- ggplot(new_species, aes(x = t, y=cumul))
-plot <- plot + geom_line()
+plot <- ggplot(new_species, aes(x = t, y=cumul))+
+  geom_line() +
+  scale_x_continuous(breaks = seq(1800, 2017, 10))
 print(plot)
 
 ```
