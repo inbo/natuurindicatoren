@@ -11,6 +11,8 @@ Load packages
 ```{r}
 library(rgbif)
 library(curl)
+library(ggplot2)
+#library(INBOtheme)
 ```
 
 Number of records in Waarnemingen.be datasets
@@ -47,6 +49,8 @@ for(s in species){
   temp <- subset(WnmBe_All, species == s)
   temp2 <- data.frame(s)
   temp2$firstyear <- min(temp$year)
+  temp2$Kingdom <- unique(temp$kingdom)
+  temp2$
   species_list <- rbind(species_list, temp2)
 }
 
@@ -56,6 +60,7 @@ remove(temp2)
 ```
 
 Calculate cumulative number of invasive species
+
 ```{r}
 
 firstrecord <- min(species_list$firstyear)
@@ -76,6 +81,10 @@ for(i in 1:tijdspanne){
 
 new_species$X1 <- NULL
 new_species$cumul <- cumsum(new_species$n)
+
+plot <- ggplot(new_species, aes(x = t, y=cumul))
+plot <- plot + geom_line()
+print(plot)
 
 ```
 
