@@ -60,7 +60,7 @@ remove(temp2)
 
 ```
 
-Caculate the cumulative number of invasive species and display in a graph
+Calculate the cumulative number of invasive species and display in a graph
 
 ```{r}
 
@@ -83,9 +83,12 @@ for(i in 1:tijdspanne){
 new_species$X1 <- NULL
 new_species$cumul <- cumsum(new_species$n)
 
-plot <- ggplot(new_species, aes(x = t, y=cumul))+
-  geom_line() +
-  scale_x_continuous(breaks = seq(1800, 2017, 10))
+plot <- ggplot(new_species, aes(x = t, y=cumul)) +
+  geom_line(colour="red") +
+  xlab("Year") + ylab("Number") + ggtitle("Cumulative number of invasive species") +
+  scale_x_continuous(breaks = seq(1800, 2017, 10))+
+  scale_y_continuous(breaks = seq(0,1900, 500))
+  
 print(plot)
 
 ```
@@ -119,11 +122,160 @@ for(k in kingdoms){
 new_species_k$X1 <- NULL
 new_species_k2 <-  transform(new_species_k,cumul = ave(n , kingdom, FUN = cumsum))
 
-plot <- ggplot(new_species_k2, aes(x = t, y=cumul,colour=kingdom))+
-  scale_x_continuous(breaks = seq(1800, 2017, 10))+
-  geom_line()
-
-print(plot)
+print(plot <- ggplot(new_species_k2, aes(x = t, y=cumul, colour = kingdom))+
+  scale_x_continuous(breaks = seq(1800, 2017, 50))+
+  scale_y_continuous(breaks = seq(0,1500, 500))+
+  geom_line()+ 
+  xlab("Year") + ylab("Number") + ggtitle("Cumulative number of invasive species per kingdom")+
+  theme(panel.background = element_rect(fill = "aliceblue"))+
+  theme(panel.grid.major = element_line(colour = "dark grey"))+
+  theme(panel.grid.minor = element_line(colour = "light grey"))+
+  theme(legend.title=element_blank())+
+  theme(legend.background = element_rect(fill = "aliceblue")))
 
 ```
+
+
+Make a graph of the different classes of invasive animals
+
+```{r}
+
+species_list_a <- subset(species_list, kingdom =="Animalia")
+
+firstrecord <- min(species_list_a$firstyear)
+newestrecord <- max(unique(WnmBe_All$year))
+tijdspanne <- (newestrecord-firstrecord)+1
+
+new_species_c <- data.frame()
+temp2 <- data.frame(1)
+temp3 <- data.frame(1)
+t <- firstrecord
+
+classes <- unique(species_list_a$class)
+for(c in classes){
+  temp <- subset(species_list_a, class == c)
+  for(i in 1:tijdspanne){
+    temp2 <- subset(temp, firstyear == t)
+    temp3$n <- nrow(temp2)
+    temp3$t <- t
+    temp3$class <- c
+    new_species_c <- rbind(new_species_c, temp3)
+    t <- t + 1
+  }
+  t <- firstrecord
+}
+
+new_species_c$X1 <- NULL
+new_species_c2 <-  transform(new_species_c,cumul = ave(n , class, FUN = cumsum))
+
+print(plot <- ggplot(new_species_c2, aes(x=t, y=cumul))+
+  geom_bar(position="dodge",stat="identity")+
+  scale_x_continuous(breaks = seq(1800, 2017, 50))+
+  scale_y_continuous(breaks = seq(0,1500, 500))+
+  xlab("Year") + ylab("Number") + ggtitle("Cumulative number of invasive animal species per class")+
+  theme(panel.background = element_rect(fill = "aliceblue"))+
+  theme(panel.grid.major = element_line(colour = "dark grey"))+
+  theme(panel.grid.minor = element_line(colour = "light grey"))+
+  theme(legend.title=element_blank())+
+  theme(legend.background = element_rect(fill = "aliceblue"))+
+    
+  facet_wrap(~class, nrow=6))
+```
+
+
+
+Make a graph of the different classes of invasive plants
+
+```{r}
+species_list_p <- subset(species_list, kingdom =="Plantae")
+
+firstrecord <- min(species_list_p$firstyear)
+newestrecord <- max(unique(WnmBe_All$year))
+tijdspanne <- (newestrecord-firstrecord)+1
+
+new_species_c <- data.frame()
+temp2 <- data.frame(1)
+temp3 <- data.frame(1)
+t <- firstrecord
+
+classes <- unique(species_list_p$class)
+for(c in classes){
+  temp <- subset(species_list_p, class == c)
+  for(i in 1:tijdspanne){
+    temp2 <- subset(temp, firstyear == t)
+    temp3$n <- nrow(temp2)
+    temp3$t <- t
+    temp3$class <- c
+    new_species_c <- rbind(new_species_c, temp3)
+    t <- t + 1
+  }
+  t <- firstrecord
+}
+
+new_species_c$X1 <- NULL
+new_species_c2 <-  transform(new_species_c,cumul = ave(n , class, FUN = cumsum))
+
+print(plot <- ggplot(new_species_c2, aes(x=t, y=cumul))+
+  geom_bar(position="dodge",stat="identity")+
+  scale_x_continuous(breaks = seq(1800, 2017, 50))+
+  scale_y_continuous(breaks = seq(0,1500, 500))+
+  xlab("Year") + ylab("Number") + ggtitle("Cumulative number of invasive plant species per class")+
+  theme(panel.background = element_rect(fill = "aliceblue"))+
+  theme(panel.grid.major = element_line(colour = "dark grey"))+
+  theme(panel.grid.minor = element_line(colour = "light grey"))+
+  theme(legend.title=element_blank())+
+  theme(legend.background = element_rect(fill = "aliceblue"))+
+  facet_wrap(~class, nrow=6))
+
+
+```
+
+
+
+
+```{r}
+library(rworldmap)
+
+map <- getMap(resolution = "low")
+plot(map, xlim = c(2.54, 6.41), ylim = c(49.48, 51.51), asp = 1)
+
+points(species_list$lon, airports$lat, col = "red", cex = .6)
+
+
+library(plyr)
+temp3 <- rename(WnmBe_All, c("species"="s"))
+temp4 <- merge(species_list, temp3[c("decimallatitude", "decimallongitude", "s")], by="s", all.y = FALSE)
+
+
+#nog aanvullen!
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
