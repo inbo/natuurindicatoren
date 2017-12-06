@@ -246,7 +246,7 @@ WnmBe_Points <- temp4[temp4$gbifid == ave(temp4$gbifid, temp4$s, FUN=min), ]
 Kaart maken van de eerste occurences van alle soorten in Vlaanderen.
 Hier zijn er wat problemen, oa. met de versie van R waardoor het package niet werkt... Ik zoek naar een betere package met map van Vlaanderen.
 ```{r}
-install.packages("BelgiumMaps.OpenStreetMap", repos = "http://www.datatailor.be/rcube", type = "source")
+#install.packages("BelgiumMaps.OpenStreetMap", repos = "http://www.datatailor.be/rcube", type = "source")
 ```
 
 In plaats van fancy te starten met mooie kaartjes, beginnen we op een eenvoudige manier. 
@@ -257,10 +257,31 @@ map <- getMap(resolution = "low")
 plot(map, xlim = c(2.54, 6), ylim = c(50.70, 51.51), asp = 1)
 
 points(WnmBe_Points$decimallongitude, WnmBe_Points$decimallatitude, col = "red", cex = .6)
+```
 
 
+Grafieken van het aantal eerste waarnemingen per jaar
+```{r}
+print(plot <- ggplot(species_list, aes(x = firstyear, fill = as.factor(firstyear))) +
+  geom_point(colour="red", fill="red", stat = "count")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive species per year") +
+  scale_x_continuous(breaks = seq(1800, 2017, 10))+
+  scale_y_continuous(breaks = seq(0,500, 50)))
 
 ```
+
+Duidelijkere grafiek indien vanaf 1940
+```{r}
+species_list2 <- subset(species_list, firstyear > 1940)
+
+print(plot <- ggplot(species_list2, aes(x = firstyear, fill = as.factor(firstyear))) +
+  geom_point(colour="red", fill="red", stat = "count") +
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive species per year") +
+  scale_x_continuous(breaks = seq(1940, 2017, 10))+
+  scale_y_continuous(breaks = seq(0,500, 50)))
+
+```
+
 
 
 
