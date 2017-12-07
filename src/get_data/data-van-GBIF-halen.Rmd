@@ -182,10 +182,7 @@ print(plot <- ggplot(new_species_c2, aes(x=t, y=cumul))+
   facet_wrap(~class, nrow=6))
 ```
 
-
-
 Make a graph of the different classes of invasive plants
-
 ```{r}
 species_list_p <- subset(species_list, kingdom =="Plantae")
 
@@ -233,7 +230,6 @@ print(plot <- ggplot(new_species_c2, aes(x=t, y=cumul))+
 Gezien er hiervoor gewerkt werd met het eerste jaar van waarneming, maar er soms meerdere waarnemingen waren in dat eerste jaar, kunnen we door de procedure hierboven niet weten of de bijhorende geografische coördinaten wel kloppen. Vandaar eerst onderstaande analyse waardoor we die eerste datum wel weten.
 ```{r}
 WnmBe_first <- WnmBe_All[WnmBe_All$eventdate == ave(WnmBe_All$eventdate, WnmBe_All$species, FUN=min), ]
-
 ```
 
 ```{r}
@@ -262,27 +258,111 @@ points(WnmBe_Points$decimallongitude, WnmBe_Points$decimallatitude, col = "red",
 
 Grafieken van het aantal eerste waarnemingen per jaar
 ```{r}
-print(plot <- ggplot(species_list, aes(x = firstyear, fill = as.factor(firstyear))) +
-  geom_point(colour="red", fill="red", stat = "count")+
+library(plyr)
+number <- rle( sort(species_list$firstyear ) )
+species_list$number <- number[[1]][ match(species_list$firstyear , number[[2]] ) ]
+species_list
+
+
+print(plot <- ggplot(species_list, aes(x = firstyear, y= number)) +
+  geom_point(colour="black", fill="black")+
+  geom_line(colour= "grey")+
+    stat_smooth(color="red")+
   xlab("Year") + ylab("Number") + ggtitle("Number of invasive species per year") +
   scale_x_continuous(breaks = seq(1800, 2017, 10))+
   scale_y_continuous(breaks = seq(0,500, 50)))
-
 ```
 
 Duidelijkere grafiek indien vanaf 1940
 ```{r}
 species_list2 <- subset(species_list, firstyear > 1940)
 
-print(plot <- ggplot(species_list2, aes(x = firstyear, fill = as.factor(firstyear))) +
-  geom_point(colour="red", fill="red", stat = "count") +
+print(plot <- ggplot(species_list2, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4) +
+  geom_line(colour= "grey")+
+    stat_smooth(color="red")+
   xlab("Year") + ylab("Number") + ggtitle("Number of invasive species per year") +
   scale_x_continuous(breaks = seq(1940, 2017, 10))+
   scale_y_continuous(breaks = seq(0,500, 50)))
 
 ```
 
+Make a graph of the number of invasive animal species
+```{r}
+library(scales)
+species_list_2a <- subset(species_list2, kingdom =="Animalia")
+
+print(plot <- ggplot(species_list_2a, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position="dodge",stat="identity") +
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive animal species per year") +
+  scale_x_continuous(breaks = seq(1940, 2017, 10))+
+  scale_y_continuous(limit=c(0,200),oob=squish),breaks = seq(0,200, 50))
+
+```
+
+Make a graph of the number of invasive plant species
+```{r}
+species_list_2p <- subset(species_list2, kingdom =="Plantae")
+
+print(plot <- ggplot(species_list_2p, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position = "dodge",stat="identity") +
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive plant species per year") +
+  scale_x_continuous(breaks = seq(1940, 2017, 10))+
+  scale_y_continuous(limit=c(0,200),oob=squish),breaks = seq(0,200, 50))
+
+```
+
+Make a graph of the number of invasive animal species per class
+```{r}
+print(plot <- ggplot(species_list_2a, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position="dodge",stat="identity") +
+  facet_wrap(~class, nrow=6, scales = "free_y")+
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive animal species per year per class") +
+  scale_y_continuous(limit=c(0,NA),oob=squish))
+```
+
+Make a graph of the number of invasive plant species per class
+```{r}
+print(plot <- ggplot(species_list_2p, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position="dodge",stat="identity") +
+  facet_wrap(~class, nrow=6, scales = "free_y")+
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive plant species per year per class") +
+  scale_y_continuous(limit=c(0,NA),oob=squish))
+```
+
+Only make graphs of the number of invasive animal species per class for relevant classes
+```{r}
+species_list_3a <- subset (species_list_2a, species_list_2a$class %in% c("Actinopterygii", "Amphibia", "Arachnida", "Aves", "Bivalvia", "Gastropoda", "Hydrozoa", "Insecta", "Malacostrata", "Mammalia", "Maxillopoda", "Reptilia"))
+
+print(plot <- ggplot(species_list_3a, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position="dodge",stat="identity") +
+  facet_wrap(~class, nrow=5, scales = "free_y")+
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive animal species per year per class") +
+  scale_y_continuous(limit=c(0,NA),oob=squish))
+```
 
 
+Only make graphs of the number of invasive plant species per class for relevant classes
+```{r}
+species_list_3p <- subset (species_list_2p, species_list_2p$class %in% c("Liliopsida", "Magnoliopsida", "Pinopsida", "Polypodiopsida"))
 
+
+print(plot <- ggplot(species_list_3p, aes(x = firstyear, y=number)) +
+  geom_point(colour="black", fill="black", size = 4, position="dodge",stat="identity") +
+  facet_wrap(~class, nrow=2, scales = "free_y")+
+  geom_line(colour= "grey")+
+  stat_smooth(color="red")+
+  xlab("Year") + ylab("Number") + ggtitle("Number of invasive animal species per year per class") +
+  scale_y_continuous(limit=c(0,NA),oob=squish))
+```
 
