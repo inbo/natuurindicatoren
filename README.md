@@ -9,7 +9,8 @@ The repo structure is based on [cookiecutter-data-science](https://github.com/dr
     ├── Makefile         : File to rerun get-data or reports
     ├── LICENSE          : MIT License
     ├── data
-    │   └── processed    : Tidy format, not-aggregated data; allows to run the analysis from outside the INBO
+    │   ├── processed    : Tidy format, not-aggregated data; allows to run the analysis from outside the INBO
+    |   └── vocabularies : Mappings of data to standardize
     │
     ├── reports          : Generated output; no manual editing!
     │   ├── html         : HTML report for each indicator
