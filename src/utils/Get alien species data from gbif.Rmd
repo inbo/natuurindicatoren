@@ -6,11 +6,14 @@ output: html_document
 ---
 
 ```{r libraries}
+library(tidyverse)
 library(rgbif)
-#library(sf)
+library(sf)
 library(sp)
 library(googleVis)
 library(rgdal)
+library(leaflet)
+require(spatialEco)
 ```
 ```{r Prep}
 crs_wgs <- CRS("+init=epsg:4326")
@@ -23,31 +26,46 @@ WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TR
 ```
 
 ```{r read UTM5x5 grid file}
-UTM5 <- st_read("D://Projects/PRJ_Faunabeheer/Algemeen/utmmap/UTM5.shp")
+UTM5 <- readOGR("D://Projects/PRJ_Faunabeheer/Algemeen/utmmap/UTM5.shp")
 UTM5_WGS <- spTransform(UTM5, crs_wgs)
-
 plot(UTM5)
 ```
 
 ```{r Convert data into spatial file}
 WnmBe_Plants$LatLong <- paste(WnmBe_Plants$decimallatitude, ":", WnmBe_Plants$decimallongitude, sep="")
-WnmBe_Plants_Spatial <-  st_as_sf(WnmBe_Plants,
-                             coords = c("decimallongitude",
-                                        "decimallatitude"),
-                             crs = 4326)
+coord <- WnmBe_Plants %>%
+    select(decimallongitude, decimallatitude)
+WnmBe_Plants_Spatial <-  SpatialPointsDataFrame(coord,
+                                           data = WnmBe_Plants,
+                                           proj4string = crs_wgs)
 
-
-
-M1 <- gvisMap(WnmBe_Plants_Spatial, "LatLong",  
-              options=list(showTip=F, showLine=F, enableScrollWheel=TRUE, 
-                           mapType='satellite', useMapTypeControl=TRUE, width=800,height=400))
-plot(M1)
+plot(WnmBe_Plants_Spatial)
 
 ```
 ```{r Spatial join met UTM5}
-WnmBe_Plants_UTM5 <- st_join(WnmBe_Plants_Spatial, UTM5,
-                             join = st_within, left = TRUE) %>%
-    select(-EofOrigin, -NofOrigin)  # exclude the EofOrigin NofOrigin columns
+WnmBe_Plants_UTM5 <- over(WnmBe_Plants_Spatial, UTM5_WGS )
 
+WnmBe_Plants_UTM5_Species <- bind_cols(WnmBe_Plants,
+                                       WnmBe_Plants_UTM5)
+
+```
+
+```{r bereken goed onderzochte Hokken}
+WnmBe_Plants_UTM5_Species2 <- WnmBe_Plants_UTM5_Species[,c("scientificname", "TAG", "year")]
+
+WnmBe_Plants_UTM5_Species2 %>% group_by(TAG, year) %>% 
+  summarise(n_distinct(scientificname), n()) -> temp
+
+totaal_aant_soorten <- n_distinct(WnmBe_Plants_UTM5_Species2$scientificname)
+
+temp$percentagegevonden <- temp$`n_distinct(scientificname)`/totaal_aant_soorten
+temp$dubbelratio <- temp$`n()`/temp$`n_distinct(scientificname)`
+temp$gewogenpercentagegevonden <- (temp$`n_distinct(scientificname)`/totaal_aant_soorten)*temp$dubbelratio
+summary(temp$percentagegevonden)
+ggplot(data = temp, aes(x=percentagegevonden)) + geom_histogram()
+summary(temp$gewogenpercentagegevonden)
+ggplot(data = temp, aes(x=gewogenpercentagegevonden)) + geom_histogram()
+temp$Onderzocht1 <- ifelse(temp$percentagegevonden > 0.0094301, 1, 0)
+temp$Onderzocht2 <- ifelse(temp$gewogenpercentagegevonden > 0.0163227, 1, 0)
 ```
 
