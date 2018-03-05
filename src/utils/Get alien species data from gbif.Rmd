@@ -67,5 +67,15 @@ summary(temp$gewogenpercentagegevonden)
 ggplot(data = temp, aes(x=gewogenpercentagegevonden)) + geom_histogram()
 temp$Onderzocht1 <- ifelse(temp$percentagegevonden > 0.0094301, 1, 0)
 temp$Onderzocht2 <- ifelse(temp$gewogenpercentagegevonden > 0.0163227, 1, 0)
+onderzochtehokken1 <- subset(temp, Onderzocht1 == 1)
+onderzochtehokken2 <- subset(temp, Onderzocht2 == 1)
+```
+```{r add zeroes}
+temp2 <- merge(WnmBe_Plants_UTM5_Species2, temp, all.x = T)
+specieslist <- unique(temp2$scientificname)
+
+for(s in specieslist){
+  
+}
 ```
 
