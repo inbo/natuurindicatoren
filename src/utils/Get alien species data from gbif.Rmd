@@ -1,0 +1,53 @@
+---
+title: "Get alien species data from gbif"
+author: "Sander"
+date: "5 maart 2018"
+output: html_document
+---
+
+```{r libraries}
+library(rgbif)
+#library(sf)
+library(sp)
+library(googleVis)
+library(rgdal)
+```
+```{r Prep}
+crs_wgs <- CRS("+init=epsg:4326")
+crs_BEL72 <- CRS("+proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=90 +lon_0=4.356939722222222 +x_0=150000.01256 +y_0=5400088.4378 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs")
+```
+
+```{r Download WnmBE plants data}
+WnmBe_Plants <- occ_download_get(key = "0006843-171025204727650", overwrite = TRUE) %>% 
+    occ_download_import(WnmBe_Plants_download, na.strings = c("", NA))
+```
+
+```{r read UTM5x5 grid file}
+UTM5 <- st_read("D://Projects/PRJ_Faunabeheer/Algemeen/utmmap/UTM5.shp")
+UTM5_WGS <- spTransform(UTM5, crs_wgs)
+
+plot(UTM5)
+```
+
+```{r Convert data into spatial file}
+WnmBe_Plants$LatLong <- paste(WnmBe_Plants$decimallatitude, ":", WnmBe_Plants$decimallongitude, sep="")
+WnmBe_Plants_Spatial <-  st_as_sf(WnmBe_Plants,
+                             coords = c("decimallongitude",
+                                        "decimallatitude"),
+                             crs = 4326)
+
+
+
+M1 <- gvisMap(WnmBe_Plants_Spatial, "LatLong",  
+              options=list(showTip=F, showLine=F, enableScrollWheel=TRUE, 
+                           mapType='satellite', useMapTypeControl=TRUE, width=800,height=400))
+plot(M1)
+
+```
+```{r Spatial join met UTM5}
+WnmBe_Plants_UTM5 <- st_join(WnmBe_Plants_Spatial, UTM5,
+                             join = st_within, left = TRUE) %>%
+    select(-EofOrigin, -NofOrigin)  # exclude the EofOrigin NofOrigin columns
+
+```
+
