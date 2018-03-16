@@ -7,14 +7,10 @@ output: html_document
 
 In dit script willen we de data van waarnemingen.be van GBIF halen, voor niet-inheemse planten en dieren.
 
-
-
-
 Due to a new version of R, character variables become factors automatically after reading. This command reverses this script to old settings.
 ```{r}
 options(stringsAsFactors = FALSE)
 ```
-
 
 Load packages
 ```{r}
