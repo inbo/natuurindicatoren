@@ -1,5 +1,5 @@
-# natuurindicatoren
-Calculation of the nature indicators for Flanders
+# Natuurindicatoren
+This Repo contains all non-Trias pipeline related indicators concerning non native species. Trias Pipeline related Indicators can be found [HERE](https://github.com/trias-project/indicators).
 
 ## Repo structure
 
