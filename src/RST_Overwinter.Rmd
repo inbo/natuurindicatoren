@@ -54,7 +54,7 @@ if(check(Nieuwe_Data2)==0){
 ```
 
 ```{r grafiekje}
-talen <- c("NL","EN")
+talen <- c("NL","EN","DE")
 extensies <- c(".eps", ".jpeg")
 for(taal in talen){
   p <- ggplot(data = Oude_Data2, aes(x = Winter, y = Maximum))
@@ -63,9 +63,13 @@ for(taal in talen){
   p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
   if(taal == "NL"){
     p <- p + scale_y_continuous("Aantal overwinterende rosse stekelstaarten",breaks = seq(0, 15, by = 2), limits = c(0,14), expand = c(0,0))
-    
   }else{
-    p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+    if(taal == "EN"){
+      p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+    }else{
+      print("WARNING: Translate y-axis, defaults to english")
+      p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+    }
   }
   p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
   p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
