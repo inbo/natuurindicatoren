@@ -54,5 +54,30 @@ if(check(Nieuwe_Data2)==0){
 ```
 
 ```{r grafiekje}
+talen <- c("NL","EN")
+extensies <- c(".eps", ".jpeg")
+for(taal in talen){
+  p <- ggplot(data = Oude_Data2, aes(x = Winter, y = Maximum))
+  p <- p + geom_col()
+  p <- p + scale_x_discrete(NULL)
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  if(taal == "NL"){
+    p <- p + scale_y_continuous("Aantal overwinterende rosse stekelstaarten",breaks = seq(0, 15, by = 2), limits = c(0,14), expand = c(0,0))
+    
+  }else{
+    p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+  }
+  p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
+  p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
+  for(extensie in extensies){
+    fn <- paste0("data/processed/Overwinterende_rosse_stekelstaarten_", taal , extensie)
+    ggsave(fn, p)
+  }
+
+  print(p)
+}
+
+
+
 ```
 
