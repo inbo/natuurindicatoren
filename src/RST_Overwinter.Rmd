@@ -12,7 +12,10 @@ knitr::opts_chunk$set(echo = TRUE)
 # Voorbereiding
 
 ```{r libraries}
+library(INBOtheme)
 library(tidyverse)
+
+check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0)}
 ```
 
 ```{r Data}
@@ -40,19 +43,16 @@ colnames(Nieuwe_Data2) <- colnames(Oude_Data)
 ```
 
 ```{r Append Nieuwe Data to Oude Data}
-if(exists(Nieuwe_Data2)){
-  Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
-}else{
+if(check(Nieuwe_Data2)==0){
   Oude_Data2 <- Oude_Data
+  print("Geen Update")
+}else{
+  Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
+  print(nrow(Nieuwe_Data2))
+  write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
 }
-
-```
-
-```{r Aangevulde data wegschrijven}
-write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
 ```
 
 ```{r grafiekje}
-p <- ggplot(data = )
 ```
 
