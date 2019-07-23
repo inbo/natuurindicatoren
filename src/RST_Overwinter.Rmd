@@ -1,0 +1,49 @@
+---
+title: "Overwinterende_Rosse_Stekels"
+author: "Sander Devisscher", "Tim Adriaens", "Koen Devos"
+date: "23 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Voorbereiding
+
+```{r libraries}
+library(tidyverse)
+```
+
+```{r Data}
+Nieuwe_Data <- read_delim("data/Raw/Rosse.Stekelstaart.watervogeltellingen.2016-2019_Tidy.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+Oude_Data <- read_delim("data/processed/RST_Aantal_Overwinterend.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r Nieuwe data klaarzetten}
+#dit stuk script filtert de winters die reeds in de oude data aanwezig zijn zodat deze niet worden verdubbeld
+laatste_winter <- Oude_Data[[nrow(Oude_Data), 1]]
+beginJaar_winter <- as.integer(substr(laatste_winter, 0,4))
+
+Nieuwe_Data2 <- Nieuwe_Data %>% 
+  filter(BeginJaar > beginJaar_winter) %>% 
+  group_by(Winter, Maand) %>% 
+  summarise(maandmaximum = sum(Aantal, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  spread(Maand, maandmaximum) %>% 
+  mutate(Maximum = apply(X = Nieuwe_Data2[,2:7], MARGIN = 1, FUN = max))
+
+colnames(Nieuwe_Data2) <- colnames(Oude_Data)
+```
+
+```{r Append Nieuwe Data to Oude Data}
+Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
+```
+
+```{r Aangevulde data wegschrijven}
+write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
+```
+
