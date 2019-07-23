@@ -40,10 +40,19 @@ colnames(Nieuwe_Data2) <- colnames(Oude_Data)
 ```
 
 ```{r Append Nieuwe Data to Oude Data}
-Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
+if(exists(Nieuwe_Data2)){
+  Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
+}else{
+  Oude_Data2 <- Oude_Data
+}
+
 ```
 
 ```{r Aangevulde data wegschrijven}
 write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
+```
+
+```{r grafiekje}
+p <- ggplot(data = )
 ```
 
