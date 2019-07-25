@@ -12,7 +12,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(leaflet)
 library(readxl)
+library(sp)
+library(leaflet)
+library(leaflet.minicharts)
+library(lubridate)
 library(tidyverse)
+```
+
+```{r stel crs'en in}
+crs_wgs <- CRS("+proj=longlat +datum=WGS84 +no_defs ")
+crs_bel <- CRS("+init=epsg:31370")
 ```
 
 ```{r}
@@ -44,8 +53,55 @@ Taxon_Rosse_Stekelstaart <- Taxon_Rosse_Stekelstaart %>%
 Locaties <- Taxon_Rosse_Stekelstaart %>% 
   group_by(EventLocation) %>% 
   summarise(LambertX_Cent = mean(LambertX), LambertY_Cent = mean(LambertY), LambertX_Max = max(LambertX), LambertY_Max = max(LambertY), LambertX_Min = min(LambertX), LambertY_Min = min(LambertY)) %>% 
-  mutate(Uncertainty_X = LambertX_Max - LambertX_Min, Uncertainty_Y = LambertY_Max - LambertY_Min)
+  mutate(Uncertainty_X = LambertX_Max - LambertX_Min, Uncertainty_Y = LambertY_Max - LambertY_Min) %>% select(EventLocation, LambertX_Cent, LambertY_Cent, Uncertainty_X, Uncertainty_Y)
 
+Taxon_Rosse_Stekelstaart_totalen <- Taxon_Rosse_Stekelstaart %>% 
+  filter(SampleType %in% SampleTypes) %>% 
+  filter(Taxon_MeasurementUnit == "Count") %>% 
+  mutate(EventDate2 = as.Date.character(EventDate, tryFormats = c("%d/%m/%Y"))) %>% 
+  mutate(Year = year(EventDate2)) %>% 
+  group_by(EventLocation, SampleType) %>% 
+  summarise(Totaal = sum(as.numeric(Taxon_Data)))
 
+Taxon_Rosse_Stekelstaart2 <- Taxon_Rosse_Stekelstaart %>% 
+  filter(SampleType %in% SampleTypes) %>% 
+  filter(Taxon_MeasurementUnit == "Count") %>% 
+  mutate(EventDate2 = as.Date.character(EventDate, tryFormats = c("%d/%m/%Y"))) %>% 
+  mutate(Year = year(EventDate2)) %>% 
+  group_by(EventLocation, SampleType, Taxon_MeasurementQualifier) %>% 
+  summarise(Aantal = sum(as.numeric(Taxon_Data))) %>% 
+  spread(key = Taxon_MeasurementQualifier, value = Aantal, fill = 0) %>% 
+  ungroup() %>% 
+  left_join(y = Locaties) %>% 
+  left_join(y = Taxon_Rosse_Stekelstaart_totalen)
+```
+
+```{r}
+coord <- Taxon_Rosse_Stekelstaart2 %>% 
+  select(X = LambertX_Cent, Y = LambertY_Cent)
+
+Taxon_Rosse_Stekelstaart_sp <- SpatialPointsDataFrame(coord,
+                                           data = Taxon_Rosse_Stekelstaart2,
+                                           proj4string = crs_bel)
+
+Taxon_Rosse_Stekelstaart_sp <- spTransform(Taxon_Rosse_Stekelstaart_sp, crs_wgs)
+Taxon_Rosse_Stekelstaart_sp$lng <- Taxon_Rosse_Stekelstaart_sp@coords[,1]
+Taxon_Rosse_Stekelstaart_sp$lat <- Taxon_Rosse_Stekelstaart_sp@coords[,2]
+
+totaal_geschoten <- sum(Taxon_Rosse_Stekelstaart2$Totaal)
+
+colors <- c("#d7191c","#fdae61","#abd9e9","#2c7bb6")
+
+map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>% 
+  addTiles() %>% 
+  addMinicharts(
+    Taxon_Rosse_Stekelstaart_sp$lng, Taxon_Rosse_Stekelstaart_sp$lat,
+    type = "pie",
+    chartdata = Taxon_Rosse_Stekelstaart2[,c("Adult Man", "Adult Vrouw", "Juveniel", "Pulli")], 
+    colorPalette = colors, 
+    width = 60 * sqrt(Taxon_Rosse_Stekelstaart2$Totaal) / sqrt(max(Taxon_Rosse_Stekelstaart2$Totaal)), transitionTime = 0
+  )
+
+print(map)
 ```
 
