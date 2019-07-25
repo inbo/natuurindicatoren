@@ -1,0 +1,51 @@
+---
+title: "RST_Beheersacties"
+author: "Sander Devisscher, Tim Adriaens"
+date: "25 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(leaflet)
+library(readxl)
+library(tidyverse)
+```
+
+```{r}
+Datum <- 220719
+fn <- paste0("data/Raw/Taxon_Rosse_Stekelstaart_", Datum, ".xlsx")
+
+Taxon_Rosse_Stekelstaart <- read_excel(fn, 
+    col_types = c("text", "text", "text", 
+        "text", "numeric", "numeric", "text", 
+        "text", "numeric", "text", "text", 
+        "text", "text", "text", "numeric", 
+        "text", "text", "text", "text", "text", 
+        "text", "text"))
+```
+
+```{r}
+table(Taxon_Rosse_Stekelstaart$SampleType, useNA = "ifany")
+SampleTypes <- c("Afschot", "Afvangst")
+
+table(Taxon_Rosse_Stekelstaart$EventLocation, useNA = "ifany")
+
+zndr_EventLocation <- Taxon_Rosse_Stekelstaart %>% 
+  filter(is.na(EventLocation)) #Allemaal met EventLocationName in de goede vorm dus als is.na(EventLocation) dan EventLocation == EventLocationName!!
+
+Taxon_Rosse_Stekelstaart <- Taxon_Rosse_Stekelstaart %>% 
+  mutate(EventLocation = case_when(is.na(EventLocation) ~ EventLocationName,
+                                   TRUE ~ EventLocation))
+
+Locaties <- Taxon_Rosse_Stekelstaart %>% 
+  group_by(EventLocation) %>% 
+  summarise(LambertX_Cent = mean(LambertX), LambertY_Cent = mean(LambertY), LambertX_Max = max(LambertX), LambertY_Max = max(LambertY), LambertX_Min = min(LambertX), LambertY_Min = min(LambertY)) %>% 
+  mutate(Uncertainty_X = LambertX_Max - LambertX_Min, Uncertainty_Y = LambertY_Max - LambertY_Min)
+
+
+```
+
