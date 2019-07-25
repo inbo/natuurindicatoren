@@ -1,0 +1,92 @@
+---
+title: "RST_Losse_Waarnemingen"
+author: "Sander Devisscher", "Tim Adriaens"
+date: "25 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries}
+library(INBOtheme)
+library(lubridate)
+library(tidyverse)
+
+check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0)}
+
+```
+
+```{r Data}
+WNMBE_Nieuw <- read_delim("data/Raw/WNMBE_Nieuw.csv", 
+    ";", escape_double = FALSE, col_types = cols(Datum = col_date(format = "%d/%m/%Y")), 
+    trim_ws = TRUE)
+
+RST_Losse_Observaties <- read_delim("data/processed/RST_Losse_Observaties.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r Data toevoegen}
+minJaar <- max(RST_Losse_Observaties$Jaar) #Tot dit jaar zit de data er reeds in.
+maxJaar <- year(Sys.Date()) #Hierdoor wordt het lopende jaar niet toegevoegd terwijl we de data behouden. 
+
+#Filter tegen dubbels (zie parameters boven)
+WNMBE_Nieuw2 <- WNMBE_Nieuw %>% 
+  mutate(Jaar = year(Datum)) %>% 
+  filter(Jaar > minJaar & Jaar < maxJaar) %>% 
+  mutate(Maand = month(Datum))
+
+#Bereken het Maximum
+Nieuwe_Data <- WNMBE_Nieuw2 %>% 
+  group_by(Gebied, Jaar, Maand) %>% 
+  summarise(MaxPerGebied = max(Aantal)) %>% 
+  ungroup() %>% 
+  group_by(Jaar) %>% 
+  summarise(Maximum = sum(MaxPerGebied))
+
+
+n_distinct(WNMBE_Nieuw2$Gebied)
+max(WNMBE_Nieuw2$Aantal)
+sum(WNMBE_Nieuw2$Aantal)/nrow(WNMBE_Nieuw2)
+
+if(check(WNMBE_Nieuw2)==0){
+  RST_Losse_Observaties2 <- RST_Losse_Observaties
+  print("Geen Update")
+}else{
+  RST_Losse_Observaties2 <- rbind(RST_Losse_Observaties, Nieuwe_Data)
+  write_delim(RST_Losse_Observaties2, "data/processed/RST_Losse_Observaties.csv", ";")
+}
+```
+
+```{r}
+talen <- c("NL","EN","DE")
+extensies <- c(".eps", ".jpeg")
+for(taal in talen){
+  p <- ggplot(data = RST_Losse_Observaties2, aes(x = Jaar, y = Maximum))
+  p <- p + geom_col()
+  p <- p + scale_x_continuous(NULL, breaks = seq(2010, max(RST_Losse_Observaties2$Jaar), by = 1))
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  if(taal == "NL"){
+    p <- p + scale_y_continuous("Maandmaximum in Vlaanderen o.b.v. losse waarnemingen",breaks = seq(0, 20, by = 2), limits = c(0,20), expand = c(0,0))
+  }else{
+    if(taal == "EN"){
+      p <- p + scale_y_continuous("Monthly maximum in Flanders based on individual observations",breaks = seq(0, 20, by = 2), limits = c(0,20),expand = c(0,0))
+    }else{
+      print("WARNING: Translate y-axis!! defaults to english")
+      p <- p + scale_y_continuous("Monthly maximum in Flanders based on individual observations",breaks = seq(0, 20, by = 2), limits = c(0,20),expand = c(0,0))
+    }
+  }
+  p <- p + theme(axis.title.y = element_text(size = 8))
+  p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
+  p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
+  for(extensie in extensies){
+    fn <- paste0("data/processed/RST_Maandmaximum_Losse_Observaties_", taal , extensie)
+    ggsave(fn, p)
+  }
+
+  print(p)
+}
+
+```
+
