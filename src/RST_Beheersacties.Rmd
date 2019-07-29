@@ -197,6 +197,5 @@ Tabel$Totaal[7] <- vangst_av_totaal$Totaal
 Tabel$Totaal[8] <- totaal_totaal$Totaal
 
 write_delim(Tabel, "./data/processed/Beheeracties_Tabel.csv", delim = ";", na = "")
-
 ```
 

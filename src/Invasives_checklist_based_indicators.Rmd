@@ -1,0 +1,43 @@
+---
+title: "Invasives_checklist_based_indicators"
+author: "Sander Devisscher, Tim Adriaens"
+date: "29 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(trias)
+library(tidyverse)
+library(INBOtheme)
+```
+
+```{r}
+distributions_unified <- read_csv("https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/interim/distributions_unified.csv")
+```
+
+```{r}
+table(distributions_unified$locality,useNA = "ifany")
+
+checklist_flanders <- distributions_unified %>% 
+  filter(locality == "Flemish Region")
+taxonkeys <- checklist_flanders$taxonKeys[!is.na(checklist_flanders$taxonKeys)]
+
+sum(is.na(taxonkeys))
+
+data <- gbif_get_taxa(taxon_keys = taxonkeys)
+
+checklist_flanders2 <- checklist_flanders %>% 
+  left_join(data, by = c("taxonKeys" = "key")) %>% 
+  filter(kingdom %in% c("Animalia", "Plantae"))
+
+p <- indicator_total_year(checklist_flanders2, start_year_plot = 1940,
+  x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+  facet_column = "kingdom", first_observed = "startYear")
+
+ggsave("data/processed/Invasives_cummulative_first_observed_kingdom.jpg", plot = p )
+```
+ 
