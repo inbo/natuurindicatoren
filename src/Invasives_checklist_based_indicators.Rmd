@@ -16,27 +16,27 @@ library(tidyverse)
 library(INBOtheme)
 ```
 
-```{r}
+```{r Get Data}
 #Voorlopige bron tot de regios opgenomen zijn in de unified checklist
 #------
 distributions_unified <- read_csv("https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/interim/distributions_unified.csv")
 #------
 
-#Flow om de data van gbif af te halen (nog niet bruikbaar)
+#Flow om de data van gbif af te halen (nog niet volledig bruikbaar)
 #------
-#taxa <- name_usage(datasetKey = "6d9e952f-948c-4483-9807-575348147c7e",
- #                  return = "data",
-  #                 limit = 10000) %>%
-  #filter(origin == "SOURCE")
+taxa <- name_usage(datasetKey = "6d9e952f-948c-4483-9807-575348147c7e",
+                  return = "data",
+                  limit = 10000) %>%
+  filter(origin == "SOURCE")
 
-#checklist_info <- c("key", "nubKey", "scientificName", "datasetKey",
-       #             "canonicalName", "species", "genus", "family", 
-        #            "order", "class", "phylum", "kingdom",	
-         #           "rank", "speciesKey", "taxonomicStatus", 	
-          #          "acceptedKey", "accepted")
-#taxa <-
- # taxa %>%
-  #select(one_of(checklist_info))
+checklist_info <- c("key", "nubKey", "scientificName", "datasetKey",
+                    "canonicalName", "species", "genus", "family", 
+                  "order", "class", "phylum", "kingdom",	
+                    "rank", "speciesKey", "taxonomicStatus", 	
+                    "acceptedKey", "accepted")
+taxa <-
+  taxa %>%
+  select(one_of(checklist_info))
 
 #distributions_unified <- taxa %>%
  # pull(key) %>%
@@ -45,25 +45,38 @@ distributions_unified <- read_csv("https://raw.githubusercontent.com/trias-proje
     #                 data = "distribution")) %>% 
   #select(-source)
 #head(distribution)
+
+description <- taxa %>%
+  pull(key) %>%
+  map_dfr(~ name_usage(.,
+                     return = "data",
+                     data = "description")) %>% 
+  select(-c(key, language, source))
+head(description, n = 10)
+
+description <- spread_with_multiple_values(data = description,
+                                           key = type,
+                                           value = description)
+
+speciesProfiles <- taxa %>%
+  pull(key) %>%
+  map_dfr(~ name_usage(.,
+                     return = "data",
+                     data = "speciesProfiles"))
 #------
 ```
 
-```{r}
+```{r indicator_total_year}
 table(distributions_unified$locality,useNA = "ifany")
 
 checklist_flanders <- distributions_unified %>% 
   filter(locality == "Flemish Region")
 
-#Te disablen wanneer de data van gbif komt
-#---------------------------------------------
-taxonkeys <- checklist_flanders$taxonKeys[!is.na(checklist_flanders$taxonKeys)]
-
-sum(is.na(taxonkeys))
-
-taxa <- gbif_get_taxa(taxon_keys = taxonkeys) 
-#----------------------------------------------
-
 checklist_flanders2 <- checklist_flanders %>% 
+  mutate(taxonKeys = as.integer(taxonKeys)) 
+
+
+%>% 
   left_join(taxa, by = c("taxonKeys" = "key")) %>% 
   filter(kingdom %in% c("Animalia", "Plantae"))
 
