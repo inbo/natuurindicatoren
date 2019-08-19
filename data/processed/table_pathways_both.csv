@@ -1,0 +1,38 @@
+pathway_level1;pathway_level2;n;examples
+contaminant;;5;Rangia cuneata , Proterorhinus semilunaris , Dreissena bugensis , Neogobius melanostomus , Rattus norvegicus 
+contaminant;animal_parasite;4;Hoplopleura erismata , Gyrodactylus proterorhini , Mastophorus , Enderleinellus kumadai 
+contaminant;food;1;Chaetopelma olivaceum 
+contaminant;habitat_material;14;Caenoplana bicolor , Hygromia cinctella , Bipalium kewense , Oenothera moravica , Eumodicogryllus bordigalensis 
+contaminant;nursery;4;Cardamine corymbosa , Wolffia columbiana , Acalypha indica , Phyllanthus tenellus 
+contaminant;on_animals;3;Eleocharis engelmannii , Nicotiana glauca , Bolboschoenus yagara Ohwi YCYang  MZhan
+contaminant;on_plants;11;Pseudagrion microcephalum , Cameraria gaultheriella , Paysandisia archon , Callidiellum rufipennis , Anoplophora chinensis 
+contaminant;seed;47;Ranunculus pensylvanicus , Zingeria pisidica Boiss Tutin, Conringia planisiliqua , Tripleurospermum decipiens Fisch  Mey Bornm, Ornithogalum narbonense 
+contaminant;timber;2;Carex loliacea , Melampyrum nemorosum 
+corridor;;9;Nyctereutes procyonoides , Proterorhinus semilunaris , Procyon lotor , Neogobius melanostomus , Dreissena bugensis 
+corridor;water;9;Neogobius melanostomus , Echinogammarus trichiatus , Limnomysis benedeni , Proterorhinus semilunaris , Dreissena bugensis 
+escape;;8;Nyctereutes procyonoides , Procyon lotor , Castor canadensis , Ondatra zibethicus , Cortaderia selloana 
+escape;agriculture;1;Valerianella locusta var oleracea Schltdl Breistr
+escape;aquaculture;6;Synurella ambulans , Acipenser ruthenus , Sinelobus vanhaareni , Procambarus clarkii , Acipenser gueldenstaedtii 
+escape;food_bait;7;Pastinaca sativa subsp sativa, Thladiantha dubia , Persea americana , Cucurbita maxima Duchesne Duchesne ex Poir, Ballerus ballerus 
+escape;horticulture;287;Prunus domestica subsp syriaca Borkh Janch ex Mansf, Vallisneria americana , Cosmos sulphureus , Thalia dealbata , Rheum rhabarbarum 
+escape;ornamental;3;Acipenser baerii , Acipenser gueldenstaedtii , Acipenser ruthenus 
+escape;pet;20;Orthriophis taeniurus , Procambarus clarkii , Triturus marmoratus , Pachytriton labiatus , Sciurus carolinensis 
+escape;research;1;Massylaea vermiculata 
+escape;zoo;1;Callosciurus erythraeus 
+natural;dispersal;9;Akebia quinata , Neogobius melanostomus , Eichhornia crassipes , Nyctereutes procyonoides , Dreissena bugensis 
+release;;8;Akebia quinata , Ondatra zibethicus , Eichhornia crassipes , Procyon lotor , Myocastor coypus 
+release;biological_control;2;Rhyzobius forestieri , Harmonia axyridis 
+release;hunting;1;Muntiacus reevesi 
+release;landscape_improvement;2;Triturus marmoratus , Pleurodeles waltl 
+release;other;5;Trachemys scripta troostii , Graptemys pseudogeographica kohnii , Graptemys pseudogeographica pseudogeographica, Pachytriton labiatus , Trachemys scripta scripta
+stowaway;;8;Proterorhinus semilunaris , Rattus norvegicus , Neogobius melanostomus , Dreissena bugensis , Chondrilla juncea 
+stowaway;ballast_water;18;Ponticola kessleri , Gobiosoma bosc , Sinelobus vanhaareni , Neogobius melanostomus , Rangia cuneata 
+stowaway;container;11;Phidippus , Callobius nomeus , Micropholcus fauroti , Crossopriza lyoni , Plexippus paykulli 
+stowaway;hull_fouling;2;Hypania invalida , Sinelobus vanhaareni 
+stowaway;organic_packing;1;Anoplophora glabripennis 
+stowaway;other;5;Aedes koreicus , Anacridium aegyptium , Aedes albopictus , Girardia tigrina , Acheta domesticus 
+stowaway;people_luggage;6;Parentucellia latifolia L Caruel, Trifolium suffocatum , Paronychia argentea , Poa infirma , Trifolium nigrescens 
+stowaway;ship;1;Massylaea vermiculata 
+stowaway;vehicles;3;Eumodicogryllus bordigalensis , Meconema meridionale , Cernuella aginnica 
+unaided;;2;Vespa velutina , Hygromia cinctella 
+unknown;;112;Artemisia princeps , Sagina japonica Sw ex Steud Ohwi, Hemigrapsus sanguineus , Boccardia proboscidea , Olios argelasius 
