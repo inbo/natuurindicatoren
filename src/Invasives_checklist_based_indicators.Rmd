@@ -119,4 +119,68 @@ p_en <- indicator_introduction_year(data_flanders, start_year_plot = 1940,
 
 ggsave("data/processed/Invasives_first_observed_habitat.jpg", plot = p_en )
 ```
- 
+
+```{r}
+from <- 2000
+n_species <- 5
+
+data_flanders <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  distinct(key, pathway_level1, pathway_level2, scientificNameAuthorship, scientificName, kingdom, phylum, first_observed) %>% 
+  mutate(pathway_level1 = case_when(pathway_level1 == "" ~ "unknown",
+                                    TRUE ~ pathway_level1)) %>% 
+  mutate(scientificNameAuthorship = case_when(is.na(scientificNameAuthorship) ~ "",
+                                              TRUE ~ scientificNameAuthorship))
+
+
+for(i in 1:nrow(data_flanders)){
+  a <- data_flanders$scientificNameAuthorship[i]
+  data_flanders$canonicalName[i] <- gsub(pattern = a, replacement = "", data_flanders$scientificName[i])
+  data_flanders$canonicalName[i] <- gsub(pattern = "[[:punct:]]", replacement = "", data_flanders$canonicalName[i])
+}
+  
+
+table_pathways_both <- get_table_pathways(data_flanders, 
+                                          from = from,
+                                          kingdom_names = "kingdom", 
+                                          phylum_names = "phylum", 
+                                          species_names = "canonicalName",
+                                          n_species = n_species)
+
+write_delim(table_pathways_both, "data/processed/table_pathways_both.csv", delim = ";")
+
+#Tabel met enkel level 1 pathways
+#Onderstaand script maakt een lijst met voorbeelden
+pathways <- unique(table_pathways_both$pathway_level1)
+temp2 <- data.frame()
+
+for(p in pathways){
+  temp <- 
+  data_flanders %>% 
+    filter(pathway_level1 == p) %>% 
+    filter(first_observed >= from)
+  if(nrow(temp) >= n_species){
+    species <- sample_n(temp, size = n_species)
+  }else{
+    species <- sample_n(temp, size = nrow(temp))
+  }
+  temp2 <- rbind(species, temp2)
+}
+
+species_examples <- 
+  temp2 %>% 
+  group_by(pathway_level1) %>% 
+  summarize(examples = paste(canonicalName, collapse = ","))
+
+#Onderstaand script maak een tabel met per pathway het aantal soorten (zndr voorbeelden)
+table_pathways_level1 <- 
+  table_pathways_both %>% 
+  group_by(pathway_level1) %>% 
+  summarise(n = sum(n)) %>% 
+  left_join(y = species_examples, by = "pathway_level1")
+
+write_delim(table_pathways_level1, "data/processed/table_pathways_level1.csv", delim = ";")
+```
+
