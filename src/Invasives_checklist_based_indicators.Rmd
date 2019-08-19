@@ -17,53 +17,87 @@ library(INBOtheme)
 ```
 
 ```{r Get Data}
-#Voorlopige bron tot de regios opgenomen zijn in de unified checklist
-#------
-distributions_unified <- read_csv("https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/interim/distributions_unified.csv")
-#------
+#Script van Damiano zie issue #60 van trias-project/indicators (https://github.com/trias-project/indicators/issues/60)
 
-#Flow om de data van gbif af te halen (nog niet volledig bruikbaar)
-#------
-taxa <- name_usage(datasetKey = "6d9e952f-948c-4483-9807-575348147c7e",
-                  return = "data",
-                  limit = 10000) %>%
-  filter(origin == "SOURCE")
+#read taxon data
+taxon <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/taxon.csv",
+  na = "")
 
-checklist_info <- c("key", "nubKey", "scientificName", "datasetKey",
-                    "canonicalName", "species", "genus", "family", 
-                  "order", "class", "phylum", "kingdom",	
-                    "rank", "speciesKey", "taxonomicStatus", 	
-                    "acceptedKey", "accepted")
-taxa <-
-  taxa %>%
-  select(one_of(checklist_info))
+#read distribution data
+distribution <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/distribution.csv",
+  na = "")
 
-#distributions_unified <- taxa %>%
- # pull(key) %>%
-  #map_dfr(~ name_usage(.,
-   #                  return = "data",
-    #                 data = "distribution")) %>% 
-  #select(-source)
-#head(distribution)
+#read description data
+description <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/description.csv",
+  na = "")
 
-description <- taxa %>%
-  pull(key) %>%
-  map_dfr(~ name_usage(.,
-                     return = "data",
-                     data = "description")) %>% 
-  select(-c(key, language, source))
-head(description, n = 10)
+#read species profile data
+speciesProfile <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/speciesprofile.csv",
+  na = "")
 
+# We *tidy* this data.frame, thus having different descriptors as different columns
 description <- spread_with_multiple_values(data = description,
                                            key = type,
                                            value = description)
+description %>% head(n = 10)
 
-speciesProfiles <- taxa %>%
-  pull(key) %>%
-  map_dfr(~ name_usage(.,
-                     return = "data",
-                     data = "speciesProfiles"))
-#------
+# Merge distribution, description and species profile information
+merged_extensions <- 
+  full_join(distribution %>% select(-c(source)),
+            description %>% select(-c(source, language)),
+            by = "taxonID") %>%
+  full_join(speciesProfile,
+            by = "taxonID")
+merged_info <- left_join(taxon, merged_extensions,
+                         by = "taxonID")
+# remove "https://www.gbif.org/species/" from all taxonIDs
+merged_info <-
+  merged_info %>%
+  mutate(key = sub(".*//www.gbif.org/species/", "", taxonID))
+
+# Split column `eventDate`
+merged_info <-
+  merged_info %>% separate(col = eventDate,
+                           sep = "/",
+                           into = c("first_observed", "last_observed"),
+                           convert = TRUE,
+                           fill = "right",
+                           remove = TRUE) %>%
+  mutate(last_observed = ifelse(is.na(last_observed),
+                                first_observed,
+                                last_observed))
+
+# Example
+merged_info %>% 
+  filter(locality == "Belgium") %>% 
+  select(key, first_observed, last_observed) %>%
+  distinct() %>%
+  filter(!is.na(first_observed) & !is.na(last_observed)) %>%
+  head()
+
+# The column `pathway` contains a prefix, `cbd_2014_pathway:` and two different pathway levels divided by symbol `_`
+merged_info %>% distinct(pathway) %>% filter(!is.na(pathway)) %>% head()
+
+# Split `pathway` in `pathway_level1` and `pathway_level2`
+merged_info <-
+  merged_info %>% 
+  rowwise() %>%
+  mutate(pathway_level1 = 
+           str_split_fixed(
+             str_split(pathway,
+                       pattern = "pathway:")[[1]][2],
+             pattern = "_", n = 2)[[1]][1],
+         pathway_level2 = 
+           str_split_fixed(
+             str_split(pathway,pattern = "pathway:")[[1]][2],
+             pattern = "_", n = 2)[[2]][1]) %>%
+  ungroup() %>%
+  select(-pathway) 
+
 ```
 
 ```{r indicator_total_year}
