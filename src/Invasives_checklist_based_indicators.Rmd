@@ -101,23 +101,22 @@ merged_info <-
 ```
 
 ```{r indicator_total_year}
-table(distributions_unified$locality,useNA = "ifany")
+table(merged_info$locality, useNA = "ifany")
 
-checklist_flanders <- distributions_unified %>% 
-  filter(locality == "Flemish Region")
+kingdoms <- c("Animalia", "Plantae")
+habitats <- c("freshwater", "freshwater|terrestrial", "marine", "marine|freshwater", "terrestrial")
 
-checklist_flanders2 <- checklist_flanders %>% 
-  mutate(taxonKeys = as.integer(taxonKeys)) 
+data_flanders <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  filter(habitat %in% habitats) %>% 
+  distinct(key, habitat, first_observed) 
 
+p_en <- indicator_introduction_year(data_flanders, start_year_plot = 1940,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
+                                 facet_column = "habitat", first_observed = "first_observed")
 
-%>% 
-  left_join(taxa, by = c("taxonKeys" = "key")) %>% 
-  filter(kingdom %in% c("Animalia", "Plantae"))
-
-p <- indicator_total_year(checklist_flanders2, start_year_plot = 1940,
-  x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
-  facet_column = "kingdom", first_observed = "startYear")
-
-ggsave("data/processed/Invasives_cummulative_first_observed_kingdom.jpg", plot = p )
+ggsave("data/processed/Invasives_first_observed_habitat.jpg", plot = p_en )
 ```
  
