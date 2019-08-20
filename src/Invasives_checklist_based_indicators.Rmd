@@ -120,7 +120,7 @@ p_en <- indicator_introduction_year(data_flanders, start_year_plot = 1940,
 ggsave("data/processed/Invasives_first_observed_habitat.jpg", plot = p_en )
 ```
 
-```{r}
+```{r pathways}
 from <- 2000
 n_species <- 5
 
@@ -174,7 +174,7 @@ species_examples <-
   group_by(pathway_level1) %>% 
   summarize(examples = paste(canonicalName, collapse = ","))
 
-#Onderstaand script maak een tabel met per pathway het aantal soorten (zndr voorbeelden)
+#Onderstaand script maak een tabel met per pathway het aantal soorten (zndr voorbeelden) en voegt dan de voorbeelden er aan toe
 table_pathways_level1 <- 
   table_pathways_both %>% 
   group_by(pathway_level1) %>% 
@@ -182,5 +182,31 @@ table_pathways_level1 <-
   left_join(y = species_examples, by = "pathway_level1")
 
 write_delim(table_pathways_level1, "data/processed/table_pathways_level1.csv", delim = ";")
+```
+
+```{r soorten op signaallijst}
+signal_list <- read_delim("https://raw.githubusercontent.com/trias-project/indicators/master/data/input/eu_concern_species.tsv", 
+    "\t", escape_double = FALSE, col_types = cols(entry_into_force = col_date(format = "%Y-%m-%d")), 
+    trim_ws = TRUE)
+
+signal_list <- 
+  signal_list %>% 
+  mutate(backbone_taxonKey = case_when(backbone_taxonKey == 6247411 ~ 1311477,
+                         TRUE ~ backbone_taxonKey))
+
+keys_flanders <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  mutate(key = as.numeric(key)) %>% 
+  mutate(key = case_when(key %in% c(6157026, 6157035, 7062200) ~ 2443002,
+                         TRUE ~ key)) %>% 
+
+  distinct(key)
+  
+data_flanders_listed <- 
+  keys_flanders %>% 
+  inner_join(y = signal_list, by = c("key" = "backbone_taxonKey"))
+  
+  
 ```
 
