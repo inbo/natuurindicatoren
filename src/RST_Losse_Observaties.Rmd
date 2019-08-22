@@ -91,7 +91,7 @@ for(taal in talen){
   p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
   p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
   for(extensie in extensies){
-    fn <- paste0("data/processed/RST_Maandmaximum_Losse_Observaties_", taal , extensie)
+    fn <- paste0("reports/figures/RST_Maandmaximum_Losse_Observaties_", taal , extensie)
     ggsave(fn, p)
   }
 

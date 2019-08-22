@@ -117,7 +117,7 @@ p_en <- indicator_introduction_year(data_flanders, start_year_plot = 1940,
                                  x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
                                  facet_column = "habitat", first_observed = "first_observed")
 
-ggsave("data/processed/Invasives_first_observed_habitat.jpg", plot = p_en )
+ggsave("reports/figures/Invasives_first_observed_habitat.jpg", plot = p_en )
 ```
 
 ```{r pathways}
@@ -230,5 +230,7 @@ p <- p + coord_flip()
 p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), expand = c(0,0))
 p <- p + scale_x_discrete("",expand = c(0,0))
 print(p) 
+
+
 ```
 
