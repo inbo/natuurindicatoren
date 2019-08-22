@@ -214,23 +214,47 @@ data_flanders_listed <-
                               class == "Liliopsida" ~ "vaatplanten",
                               class == "Magnoliopsida" ~ "vaatplanten",
                               class == "Malacostraca" ~ "kreeftachtigen",
-                              class == "Reptilia" ~ "amfibieën en reptielen"))
+                              class == "Reptilia" ~ "amfibieën en reptielen")) %>% 
+  mutate(class_en = case_when(class == "Mammalia" ~ "mammals",
+                              class == "Actinopterygii" ~ "fish",
+                              class == "Amphibia" ~ "amphibians and reptiles",
+                              class == "Insecta" ~ "insects",
+                              class == "Liliopsida" ~ "vascular plants",
+                              class == "Magnoliopsida" ~ "vascular plants",
+                              class == "Malacostraca" ~ "crustaceans",
+                              class == "Reptilia" ~ "amphibians and reptiles"))
 
 table(data_flanders_listed$class_nl)
 
-data_flanders_listed_class_nl <- 
+data_flanders_listed_class <- 
   data_flanders_listed %>% 
-  group_by(class_nl) %>% 
+  group_by(class_nl,class_en) %>% 
   summarise(n = n_distinct(key))
+
+talen <- c("NL","EN","DE")
+extensies <- c(".eps", ".jpeg")
+for(taal in talen){
+  if(taal == "NL"){
+    p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_nl, n), y = n))
+  }else{
+    if(taal == "EN"){
+      p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_en, n), y = n))
+    }else{
+      print("WARNING: Translate classes!! defaults to english")
+      p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_en, n), y = n))
+    }
+  }
+  p <- p + geom_bar(stat = "identity")
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  p <- p + coord_flip()
+  p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), limits = c(0, 14), expand = c(0,0))
+  p <- p + scale_x_discrete("",expand = c(0,0))
+  print(p) 
   
-p <- ggplot(data = data_flanders_listed_class_nl, aes(x = reorder(class_nl, n), y = n))
-p <- p + geom_bar(stat = "identity")
-p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
-p <- p + coord_flip()
-p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), expand = c(0,0))
-p <- p + scale_x_discrete("",expand = c(0,0))
-print(p) 
-
-
+  for(extensie in extensies){
+    fn <- paste0("reports/figures/NumberOfSpeciesOnList_", taal, extensie)
+    ggsave(fn , p)
+  }
+}
 ```
 
