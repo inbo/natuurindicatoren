@@ -200,8 +200,7 @@ keys_flanders <-
   mutate(key = as.numeric(key)) %>% 
   mutate(key = case_when(key %in% c(6157026, 6157035, 7062200) ~ 2443002,
                          TRUE ~ key)) %>% 
-
-  distinct(key)
+  distinct(key, kingdom, phylum)
   
 data_flanders_listed <- 
   keys_flanders %>% 
