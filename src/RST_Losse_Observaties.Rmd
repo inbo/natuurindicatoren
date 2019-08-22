@@ -38,13 +38,23 @@ WNMBE_Nieuw2 <- WNMBE_Nieuw %>%
   mutate(Maand = month(Datum))
 
 #Bereken het Maximum
-Nieuwe_Data <- WNMBE_Nieuw2 %>% 
+Nieuwe_Data_max_gebied <- WNMBE_Nieuw2 %>% 
   group_by(Gebied, Jaar, Maand) %>% 
   summarise(MaxPerGebied = max(Aantal)) %>% 
-  ungroup() %>% 
+  filter(Jaar < maxJaar, 
+         Maand > 3, 
+         Maand < 10) %>% 
+  ungroup()
+
+
+if(nrow(WNMBE_Nieuw2) > 0){
+ write_delim(Nieuwe_Data_max_gebied, "./data/processed/RST_LosseWNM_MaxPerGebied.csv", delim = ";")
+}
+
+Nieuwe_Data <- 
+  Nieuwe_Data_max_gebied %>% 
   group_by(Jaar) %>% 
   summarise(Maximum = sum(MaxPerGebied))
-
 
 n_distinct(WNMBE_Nieuw2$Gebied)
 max(WNMBE_Nieuw2$Aantal)
