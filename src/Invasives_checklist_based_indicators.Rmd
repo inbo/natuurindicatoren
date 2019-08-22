@@ -200,12 +200,35 @@ keys_flanders <-
   mutate(key = as.numeric(key)) %>% 
   mutate(key = case_when(key %in% c(6157026, 6157035, 7062200) ~ 2443002,
                          TRUE ~ key)) %>% 
-  distinct(key, kingdom, phylum)
+  distinct(key, kingdom, phylum, class)
+
+
   
 data_flanders_listed <- 
   keys_flanders %>% 
-  inner_join(y = signal_list, by = c("key" = "backbone_taxonKey"))
+  inner_join(y = signal_list, by = c("key" = "backbone_taxonKey")) %>% 
+  mutate(class_nl = case_when(class == "Mammalia" ~ "zoogdieren",
+                              class == "Actinopterygii" ~ "vissen",
+                              class == "Amphibia" ~ "amfibieën en reptielen",
+                              class == "Insecta" ~ "insecten",
+                              class == "Liliopsida" ~ "vaatplanten",
+                              class == "Magnoliopsida" ~ "vaatplanten",
+                              class == "Malacostraca" ~ "kreeftachtigen",
+                              class == "Reptilia" ~ "amfibieën en reptielen"))
+
+table(data_flanders_listed$class_nl)
+
+data_flanders_listed_class_nl <- 
+  data_flanders_listed %>% 
+  group_by(class_nl) %>% 
+  summarise(n = n_distinct(key))
   
-  
+p <- ggplot(data = data_flanders_listed_class_nl, aes(x = reorder(class_nl, n), y = n))
+p <- p + geom_bar(stat = "identity")
+p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+p <- p + coord_flip()
+p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), expand = c(0,0))
+p <- p + scale_x_discrete("",expand = c(0,0))
+print(p) 
 ```
 
