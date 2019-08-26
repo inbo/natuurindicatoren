@@ -165,6 +165,15 @@ table_pathways_both <- get_table_pathways(data_flanders,
 
 write_delim(table_pathways_both, "data/processed/table_pathways_both.csv", delim = ";")
 
+tabel_pathways_beide <- 
+  table_pathways_both %>% 
+  rename(introductieweg_niveau1 = pathway_level1,
+         introductieweg_niveau2 = pathway_level2,
+         voorbeelden = examples)
+
+write_delim(tabel_pathways_beide, "data/processed/table_pathways_beide.csv", delim = ";")
+
+
 #Tabel met enkel level 1 pathways
 #Onderstaand script maakt een lijst met voorbeelden
 pathways <- unique(table_pathways_both$pathway_level1)
@@ -196,6 +205,14 @@ table_pathways_level1 <-
   left_join(y = species_examples, by = "pathway_level1")
 
 write_delim(table_pathways_level1, "data/processed/table_pathways_level1.csv", delim = ";")
+
+tabel_pathways_niveau1 <- 
+  table_pathways_level1 %>% 
+  rename(introductieweg = pathway_level1,
+         voorbeelden = examples)
+
+write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
+
 ```
 
 ```{r soorten op signaallijst}
@@ -238,7 +255,7 @@ data_flanders_listed <-
                               class == "Malacostraca" ~ "crustaceans",
                               class == "Reptilia" ~ "amphibians and reptiles"))
 
-table(data_flanders_listed$class_nl)
+table(data_flanders_listed$class_nl, useNA = "ifany")
 
 data_flanders_listed_class <- 
   data_flanders_listed %>% 

@@ -1,0 +1,38 @@
+introductieweg_niveau1;introductieweg_niveau2;n;voorbeelden
+besmetting;;5;Neogobius melanostomus , Rangia cuneata , Dreissena bugensis , Rattus norvegicus , Proterorhinus semilunaris 
+besmetting;dierlijke parasiet;4;Enderleinellus kumadai , Gyrodactylus proterorhini , Mastophorus , Hoplopleura erismata 
+besmetting;voeder;1;Chaetopelma olivaceum 
+besmetting;habitat materiaal;14;Hygromia cinctella , Plantago sempervirens , Eumodicogryllus bordigalensis , Odontites jaubertianus Boreau DDietr ex Walpers, Umbilicus rupestris Salisb Dandy
+besmetting;kwekerij;4;Cardamine corymbosa , Phyllanthus tenellus , Acalypha indica , Wolffia columbiana 
+besmetting;op dieren;3;Nicotiana glauca , Eleocharis engelmannii , Bolboschoenus yagara Ohwi YCYang  MZhan
+besmetting;op planten;11;Linepithema humile , Diestrammena asynamora , Hygromia cinctella , Cacyreus marshalli , Anoplophora chinensis 
+besmetting;zaad;47;Digitaria abyssinica Hochst ex ARich Stapf, Ornithogalum narbonense , Cuscuta epilinum , Trigonella esculenta , Ranunculus pensylvanicus 
+besmetting;hout;2;Melampyrum nemorosum , Carex loliacea 
+corridor;;9;Cortaderia selloana , Proterorhinus semilunaris , Procyon lotor , Nyctereutes procyonoides , Dreissena bugensis 
+corridor;water;9;Ponticola kessleri , Neogobius fluviatilis , Dreissena bugensis , Dendrocoelum romanodanubiale , Neogobius melanostomus 
+ontsnapping;;8;Callosciurus erythraeus , Nyctereutes procyonoides , Procyon lotor , Cortaderia selloana , Rattus norvegicus 
+ontsnapping;landbouw;1;Valerianella locusta var oleracea Schltdl Breistr
+ontsnapping;aquacultuur;6;Acipenser gueldenstaedtii , Sinelobus vanhaareni , Synurella ambulans , Acipenser ruthenus , Acipenser baerii 
+ontsnapping;lokvoeder;7;Cucurbita maxima Duchesne Duchesne ex Poir, Thladiantha dubia , Pastinaca sativa subsp sativa, Cucurbita moschata , Allium ramosum 
+ontsnapping;tuinbouw;287;Lonicera chrysantha , Smilax aspera , Dimorphotheca pluvialis , Geum ternatum Stephan Smedmark, Eutrochium maculatum L EELamont
+ontsnapping;decoratief;3;Acipenser gueldenstaedtii , Acipenser baerii , Acipenser ruthenus 
+ontsnapping;huisdier;20;Sciurus carolinensis , Massylaea vermiculata , Meriones unguiculatus , Mephitis mephitis , Tamiasciurus hudsonicus 
+ontsnapping;onderzoek;1;Massylaea vermiculata 
+ontsnapping;dierentuin;1;Callosciurus erythraeus 
+natuurlijk;verspreiding;9;Neogobius melanostomus , Cortaderia selloana , Eichhornia crassipes , Akebia quinata , Dreissena bugensis 
+vrijlating;;8;Akebia quinata , Nyctereutes procyonoides , Procyon lotor , Myocastor coypus , Cortaderia selloana 
+vrijlating;biologische bestrijding;2;Rhyzobius forestieri , Harmonia axyridis 
+vrijlating;jacht;1;Muntiacus reevesi 
+vrijlating;landschap verbetering;2;Triturus marmoratus , Pleurodeles waltl 
+vrijlating;andere;5;Graptemys pseudogeographica pseudogeographica, Trachemys scripta scripta, Pachytriton labiatus , Trachemys scripta troostii , Graptemys pseudogeographica kohnii 
+verstekeling;;8;Dreissena bugensis , Nysius huttoni , Neogobius melanostomus , Rattus norvegicus , Hygromia cinctella 
+verstekeling;ballast water;18;Sinelobus vanhaareni , Tasserkidrilus americanus , Hemigrapsus sanguineus , Potamothrix vejdovskyi , Monopylephorus limosus 
+verstekeling;container;11;Crossopriza lyoni , Latrodectus geometricus , Neoscona nautica , Phidippus , Massylaea vermiculata 
+verstekeling;romp vervuiling;2;Sinelobus vanhaareni , Hypania invalida 
+verstekeling;organische verpakking;1;Anoplophora glabripennis 
+verstekeling;andere;5;Anacridium aegyptium , Aedes albopictus , Acheta domesticus , Girardia tigrina , Aedes koreicus 
+verstekeling;baggage;6;Trifolium suffocatum , Parentucellia latifolia L Caruel, Poa infirma , Paronychia argentea , Trifolium nigrescens 
+verstekeling;schip;1;Massylaea vermiculata 
+verstekeling;voertuig;3;Eumodicogryllus bordigalensis , Meconema meridionale , Cernuella aginnica 
+zonder hulp;;2;Hygromia cinctella , Vespa velutina 
+onbekend;;112;Neuroctenus lestoni , Oenothera royfraseri , Thaumatotibia leucotreta , Heliophanus kochii , Ondatra zibethicus 
