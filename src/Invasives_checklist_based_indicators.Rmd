@@ -106,18 +106,32 @@ table(merged_info$locality, useNA = "ifany")
 kingdoms <- c("Animalia", "Plantae")
 habitats <- c("freshwater", "freshwater|terrestrial", "marine", "marine|freshwater", "terrestrial")
 
-data_flanders <- 
+data_flanders_en <- 
   merged_info %>% 
   filter(locality == "Flemish Region") %>% 
   filter(kingdom %in% kingdoms) %>% 
   filter(habitat %in% habitats) %>% 
   distinct(key, habitat, first_observed) 
 
-p_en <- indicator_introduction_year(data_flanders, start_year_plot = 1940,
+data_flanders_nl <- 
+  data_flanders_en %>% 
+  mutate(habitat = case_when(habitat == "freshwater" ~ "zoetwater",
+                             habitat == "freshwater|terrestrial" ~ "zoetwater|terrestrisch",
+                             habitat == "marine" ~ "marien",
+                             habitat == "marine|freshwater" ~ "marien|zoetwater", 
+                             habitat == "terrestrial" ~ "terrestrisch"))
+
+p_en <- indicator_introduction_year(data_flanders_en, start_year_plot = 1940,
                                  x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
                                  facet_column = "habitat", first_observed = "first_observed")
 
-ggsave("reports/figures/Invasives_first_observed_habitat.jpg", plot = p_en )
+p_nl <- indicator_introduction_year(data_flanders_nl, start_year_plot = 1960,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
+                                 facet_column = "habitat", first_observed = "first_observed") 
+
+
+
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en )
 ```
 
 ```{r pathways}
