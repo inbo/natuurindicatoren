@@ -110,28 +110,62 @@ data_flanders_en <-
   merged_info %>% 
   filter(locality == "Flemish Region") %>% 
   filter(kingdom %in% kingdoms) %>% 
-  filter(habitat %in% habitats) %>% 
-  distinct(key, habitat, first_observed) 
+  filter(habitat %in% habitats) %>%
+  distinct(key, habitat, first_observed, kingdom) %>% 
+  mutate(habitat = case_when(habitat == "freshwater|terrestrial" ~ "estuarine",
+                             habitat == "marine|freshwater" ~ "estuarine",
+                             TRUE ~ habitat))
+
+sum(!is.na(data_flanders_en$first_observed))
+sum(!is.na(data_flanders_en$habitat))
+temp <- data_flanders_en %>% filter(!is.na(first_observed))
+table(temp$kingdom, temp$habitat)
 
 data_flanders_nl <- 
   data_flanders_en %>% 
   mutate(habitat = case_when(habitat == "freshwater" ~ "zoetwater",
-                             habitat == "freshwater|terrestrial" ~ "zoetwater|terrestrisch",
+                             habitat == "estuarine" ~ "estuarien",
                              habitat == "marine" ~ "marien",
-                             habitat == "marine|freshwater" ~ "marien|zoetwater", 
+                             habitat == "estuarine" ~ "estuarien", 
                              habitat == "terrestrial" ~ "terrestrisch"))
 
-p_en <- indicator_introduction_year(data_flanders_en, start_year_plot = 1940,
-                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
+p_en <- indicator_introduction_year(data_flanders_en, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
                                  facet_column = "habitat", first_observed = "first_observed")
 
-p_nl <- indicator_introduction_year(data_flanders_nl, start_year_plot = 1960,
-                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 2,
+p_nl <- indicator_introduction_year(data_flanders_nl, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
                                  facet_column = "habitat", first_observed = "first_observed") 
 
+p_nl_cum <- indicator_total_year(data_flanders_nl, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed") 
 
+p_en_cum <- indicator_total_year(data_flanders_en, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed") 
+width <- 10
+heigth <- 10
 
-ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en )
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum , width = width, height = heigth)
+
+data_flanders_stats <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  filter(habitat %in% habitats) %>%
+  distinct(key, habitat, first_observed, kingdom, `invasion stage`) %>% 
+  filter(!is.na(`invasion stage`))
+
+table(data_flanders_stats$habitat, data_flanders_stats$kingdom, data_flanders_stats$`invasion stage`)
+
 ```
 
 ```{r pathways}
