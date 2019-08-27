@@ -335,7 +335,10 @@ data_flanders_listed <-
                               class == "Liliopsida" ~ "vascular plants",
                               class == "Magnoliopsida" ~ "vascular plants",
                               class == "Malacostraca" ~ "crustaceans",
-                              class == "Reptilia" ~ "amphibians and reptiles"))
+                              class == "Reptilia" ~ "amphibians and reptiles"))  %>% 
+  add_row(key = 1111111, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Oxyura jamaicensis", english_name = "Ruddy duck", class_nl = "vogels", class_en = "birds") %>% 
+  add_row(key = 1111112, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Alopochen aegyptica", english_name = "Egyptian goose", class_nl = "vogels", class_en = "birds") %>% 
+   add_row(key = 1111113, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Threskiornis aethiopicus", english_name = "Sacred ibis", class_nl = "vogels", class_en = "birds")
 
 table(data_flanders_listed$class_nl, useNA = "ifany")
 
