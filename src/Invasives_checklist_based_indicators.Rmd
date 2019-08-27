@@ -169,9 +169,45 @@ tabel_pathways_beide <-
   table_pathways_both %>% 
   rename(introductieweg_niveau1 = pathway_level1,
          introductieweg_niveau2 = pathway_level2,
-         voorbeelden = examples)
+         voorbeelden = examples) %>% 
+  mutate(introductieweg_niveau1 = case_when(introductieweg_niveau1 == "contaminant" ~ "besmetting",
+                                            introductieweg_niveau1 == "escape" ~ "ontsnapping",
+                                            introductieweg_niveau1 == "natural" ~ "natuurlijk",
+                                            introductieweg_niveau1 == "release" ~ "vrijlating",
+                                            introductieweg_niveau1 == "stowaway" ~ "verstekeling",
+                                            introductieweg_niveau1 == "unaided" ~ "zonder hulp",
+                                            introductieweg_niveau1 == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg_niveau1)) %>% 
+  mutate(introductieweg_niveau2 = case_when(introductieweg_niveau2 == "agriculture" ~ "landbouw",
+                                            introductieweg_niveau2 == "animal_parasite" ~ "dierlijke parasiet",
+                                            introductieweg_niveau2 == "aquaculture" ~ "aquacultuur",
+                                            introductieweg_niveau2 == "ballast_water" ~ "ballast water",
+                                            introductieweg_niveau2 == "biological_control" ~ "biologische bestrijding",
+                                            introductieweg_niveau2 == "dispersal" ~ "verspreiding",
+                                            introductieweg_niveau2 == "food" ~ "voeder",
+                                            introductieweg_niveau2 == "food_bait" ~ "lokvoeder",
+                                            introductieweg_niveau2 == "habitat_material" ~ "habitat materiaal",
+                                            introductieweg_niveau2 == "horticulture" ~ "tuinbouw",
+                                            introductieweg_niveau2 == "hull_fouling" ~ "romp vervuiling",
+                                            introductieweg_niveau2 == "hunting" ~ "jacht",
+                                            introductieweg_niveau2 == "landscape_improvement" ~ "landschap verbetering",
+                                            introductieweg_niveau2 == "nursery" ~ "kwekerij",
+                                            introductieweg_niveau2 == "on_animals" ~ "op dieren",
+                                            introductieweg_niveau2 == "on_plants" ~ "op planten",
+                                            introductieweg_niveau2 == "organic_packing" ~ "organische verpakking",
+                                            introductieweg_niveau2 == "ornamental" ~ "decoratief",
+                                            introductieweg_niveau2 == "other" ~ "andere",
+                                            introductieweg_niveau2 == "people_luggage" ~ "baggage",
+                                            introductieweg_niveau2 == "pet" ~ "huisdier",
+                                            introductieweg_niveau2 == "research" ~ "onderzoek",
+                                            introductieweg_niveau2 == "seed" ~ "zaad",
+                                            introductieweg_niveau2 == "ship" ~ "schip",
+                                            introductieweg_niveau2 == "timber" ~ "hout",
+                                            introductieweg_niveau2 == "vehicles" ~ "voertuig",
+                                            introductieweg_niveau2 == "zoo" ~ "dierentuin",
+                                            TRUE ~ introductieweg_niveau2))
 
-write_delim(tabel_pathways_beide, "data/processed/table_pathways_beide.csv", delim = ";")
+write_delim(tabel_pathways_beide, "data/processed/tabel_pathways_beide.csv", delim = ";")
 
 
 #Tabel met enkel level 1 pathways
@@ -209,7 +245,15 @@ write_delim(table_pathways_level1, "data/processed/table_pathways_level1.csv", d
 tabel_pathways_niveau1 <- 
   table_pathways_level1 %>% 
   rename(introductieweg = pathway_level1,
-         voorbeelden = examples)
+         voorbeelden = examples) %>% 
+  mutate(introductieweg = case_when(introductieweg == "contaminant" ~ "besmetting",
+                                            introductieweg == "escape" ~ "ontsnapping",
+                                            introductieweg == "natural" ~ "natuurlijk",
+                                            introductieweg == "release" ~ "vrijlating",
+                                            introductieweg == "stowaway" ~ "verstekeling",
+                                            introductieweg == "unaided" ~ "zonder hulp",
+                                            introductieweg == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg))
 
 write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
 
