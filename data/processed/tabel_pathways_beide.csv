@@ -1,38 +1,40 @@
 introductieweg_niveau1;introductieweg_niveau2;n;voorbeelden
-besmetting;;5;Neogobius melanostomus , Rangia cuneata , Dreissena bugensis , Rattus norvegicus , Proterorhinus semilunaris 
-besmetting;dierlijke parasiet;4;Enderleinellus kumadai , Gyrodactylus proterorhini , Mastophorus , Hoplopleura erismata 
+besmetting;;17;Campylopus introflexus , Dreissena bugensis , Proterorhinus semilunaris , Pseudorasbora parva , Pimephales promelas 
+besmetting;dierlijke parasiet;5;Anguillicoloides crassus Kuwahara Niimi  Itagaki 1974 Moravec  Taraschewski 1988, Gyrodactylus proterorhini , Enderleinellus kumadai , Mastophorus , Hoplopleura erismata 
 besmetting;voeder;1;Chaetopelma olivaceum 
-besmetting;habitat materiaal;14;Hygromia cinctella , Plantago sempervirens , Eumodicogryllus bordigalensis , Odontites jaubertianus Boreau DDietr ex Walpers, Umbilicus rupestris Salisb Dandy
-besmetting;kwekerij;4;Cardamine corymbosa , Phyllanthus tenellus , Acalypha indica , Wolffia columbiana 
-besmetting;op dieren;3;Nicotiana glauca , Eleocharis engelmannii , Bolboschoenus yagara Ohwi YCYang  MZhan
-besmetting;op planten;11;Linepithema humile , Diestrammena asynamora , Hygromia cinctella , Cacyreus marshalli , Anoplophora chinensis 
-besmetting;zaad;47;Digitaria abyssinica Hochst ex ARich Stapf, Ornithogalum narbonense , Cuscuta epilinum , Trigonella esculenta , Ranunculus pensylvanicus 
-besmetting;hout;2;Melampyrum nemorosum , Carex loliacea 
-corridor;;9;Cortaderia selloana , Proterorhinus semilunaris , Procyon lotor , Nyctereutes procyonoides , Dreissena bugensis 
-corridor;water;9;Ponticola kessleri , Neogobius fluviatilis , Dreissena bugensis , Dendrocoelum romanodanubiale , Neogobius melanostomus 
-ontsnapping;;8;Callosciurus erythraeus , Nyctereutes procyonoides , Procyon lotor , Cortaderia selloana , Rattus norvegicus 
-ontsnapping;landbouw;1;Valerianella locusta var oleracea Schltdl Breistr
-ontsnapping;aquacultuur;6;Acipenser gueldenstaedtii , Sinelobus vanhaareni , Synurella ambulans , Acipenser ruthenus , Acipenser baerii 
-ontsnapping;lokvoeder;7;Cucurbita maxima Duchesne Duchesne ex Poir, Thladiantha dubia , Pastinaca sativa subsp sativa, Cucurbita moschata , Allium ramosum 
-ontsnapping;tuinbouw;287;Lonicera chrysantha , Smilax aspera , Dimorphotheca pluvialis , Geum ternatum Stephan Smedmark, Eutrochium maculatum L EELamont
-ontsnapping;decoratief;3;Acipenser gueldenstaedtii , Acipenser baerii , Acipenser ruthenus 
-ontsnapping;huisdier;20;Sciurus carolinensis , Massylaea vermiculata , Meriones unguiculatus , Mephitis mephitis , Tamiasciurus hudsonicus 
+besmetting;habitat materiaal;18;Odontites jaubertianus Boreau DDietr ex Walpers, Eumodicogryllus bordigalensis , Umbilicus rupestris Salisb Dandy, Marionfyfea adventor , Oenothera moravica 
+besmetting;kwekerij;9;Axonopus fissifolius Raddi Kuhlm, Wolffia columbiana , Pilea microphylla , Cardamine corymbosa , Acalypha indica 
+besmetting;op dieren;7;Nicotiana glauca , Juncus canadensis , Bolboschoenus yagara Ohwi YCYang  MZhan, Juncus foliosus , Sinanodonta woodiana 
+besmetting;op planten;15;Linepithema humile , Diestrammena asynamora , Lasius neglectus , Pseudagrion microcephalum , Paysandisia archon 
+besmetting;zaden;117;Zingeria pisidica Boiss Tutin, Solanum viarum , Caylusea abyssinica , Silene behen , Sida spinosa 
+besmetting;houthandel;3;Melampyrum nemorosum , Carex loliacea , Camponotus vagus 
+corridor;;17;Paspalum distichum , Proterorhinus semilunaris , Campylopus introflexus , Ctenopharyngodon idella , Neogobius melanostomus 
+corridor;water;16;Jaera istri , Limnomysis benedeni , Neogobius fluviatilis , Corbicula fluminea , Dendrocoelum romanodanubiale 
+ontsnapping;;17;Cortaderia selloana , Rattus norvegicus , Clarias gariepinus , Procyon lotor , Tamias sibiricus 
+ontsnapping;landbouw;4;Crambe hispanica subsp abyssinica Hochst ex REFr APrina, Glycine max L Merr, Valerianella locusta var oleracea Schltdl Breistr, Vigna radiata L RWilczek
+ontsnapping;aquacultuur;14;Pacifastacus leniusculus , Sinanodonta woodiana , Acipenser ruthenus , Oreochromis niloticus , Magallana gigas 
+ontsnapping;lokaas;13;Cyperus rotundus , Pastinaca sativa subsp sativa, Cucurbita moschata , Pimephales promelas , Cucurbita maxima Duchesne Duchesne ex Poir
+ontsnapping;bontfokkerij;1;Neovison vison 
+ontsnapping;tuinbouw;347;Rheum rhabarbarum , Colutea media , Ilex crenata , Spiraea nipponica , Artemisia campestris subsp maritima DC Arcang
+ontsnapping;decoratief;3;Acipenser ruthenus , Acipenser gueldenstaedtii , Acipenser baerii 
+ontsnapping;huisdier;24;Pontastacus leptodactylus , Orconectes limosus , Nasua nasua , Cipangopaludina chinensis , Trachemys scripta elegans 
 ontsnapping;onderzoek;1;Massylaea vermiculata 
-ontsnapping;dierentuin;1;Callosciurus erythraeus 
-natuurlijk;verspreiding;9;Neogobius melanostomus , Cortaderia selloana , Eichhornia crassipes , Akebia quinata , Dreissena bugensis 
-vrijlating;;8;Akebia quinata , Nyctereutes procyonoides , Procyon lotor , Myocastor coypus , Cortaderia selloana 
-vrijlating;biologische bestrijding;2;Rhyzobius forestieri , Harmonia axyridis 
-vrijlating;jacht;1;Muntiacus reevesi 
-vrijlating;landschap verbetering;2;Triturus marmoratus , Pleurodeles waltl 
-vrijlating;andere;5;Graptemys pseudogeographica pseudogeographica, Trachemys scripta scripta, Pachytriton labiatus , Trachemys scripta troostii , Graptemys pseudogeographica kohnii 
-verstekeling;;8;Dreissena bugensis , Nysius huttoni , Neogobius melanostomus , Rattus norvegicus , Hygromia cinctella 
-verstekeling;ballast water;18;Sinelobus vanhaareni , Tasserkidrilus americanus , Hemigrapsus sanguineus , Potamothrix vejdovskyi , Monopylephorus limosus 
-verstekeling;container;11;Crossopriza lyoni , Latrodectus geometricus , Neoscona nautica , Phidippus , Massylaea vermiculata 
-verstekeling;romp vervuiling;2;Sinelobus vanhaareni , Hypania invalida 
+ontsnapping;dierentuin;2;Tamias sibiricus , Callosciurus erythraeus 
+natuurlijk;verspreiding;17;Nyctereutes procyonoides , Campylopus introflexus , Paspalum distichum , Ensis directus , Magallana gigas 
+uitzetting;;17;Eichhornia crassipes , Pseudorasbora parva , Clarias gariepinus , Tamias sibiricus , Akebia quinata 
+uitzetting;biologische bestrijding;6;Hypophthalmichthys nobilis , Rhyzobius lophanthae , Rhyzobius forestieri , Hypophthalmichthys molitrix , Ctenopharyngodon idella 
+uitzetting;natuurbescherming;1;Natrix helvetica 
+uitzetting;jacht;1;Muntiacus reevesi 
+uitzetting;landschap verbetering;3;Pleurodeles waltl , Triturus marmoratus , Natrix helvetica 
+uitzetting;andere;6;Graptemys pseudogeographica kohnii , Trachemys scripta elegans , Graptemys pseudogeographica pseudogeographica, Trachemys scripta scripta, Trachemys scripta troostii 
+verstekeling;;20;Trochoidea elegans , Magallana gigas , Campylopus introflexus , Corbicula fluminea , Rattus norvegicus 
+verstekeling;ballast water;28;Laonome calida , Neogobius fluviatilis , Marenzelleria neglecta , Hemimysis anomala , Marenzelleria viridis 
+verstekeling;container;14;Callobius nomeus , Plexippus paykulli , Latrodectus geometricus , Latrodectus mactans , Neoscona nautica 
+verstekeling;romp vervuiling;12;Amphibalanus amphitrite , Crangonyx pseudogracilis , Ficopomatus enigmaticus , Caprella mutica , Austrominius modestus 
 verstekeling;organische verpakking;1;Anoplophora glabripennis 
-verstekeling;andere;5;Anacridium aegyptium , Aedes albopictus , Acheta domesticus , Girardia tigrina , Aedes koreicus 
-verstekeling;baggage;6;Trifolium suffocatum , Parentucellia latifolia L Caruel, Poa infirma , Paronychia argentea , Trifolium nigrescens 
-verstekeling;schip;1;Massylaea vermiculata 
-verstekeling;voertuig;3;Eumodicogryllus bordigalensis , Meconema meridionale , Cernuella aginnica 
-zonder hulp;;2;Hygromia cinctella , Vespa velutina 
-onbekend;;112;Neuroctenus lestoni , Oenothera royfraseri , Thaumatotibia leucotreta , Heliophanus kochii , Ondatra zibethicus 
+verstekeling;andere;9;Hemimysis anomala , Ensis directus , Aedes albopictus , Proasellus coxalis , Anacridium aegyptium 
+verstekeling;mensen en hun baggage;7;Paronychia argentea , Trifolium nigrescens , Cernuella aginnica , Parentucellia latifolia L Caruel, Xerocincta neglecta 
+verstekeling;scheepvaart;1;Massylaea vermiculata 
+verstekeling;voertuig;4;Cernuella aginnica , Xerocincta neglecta , Eumodicogryllus bordigalensis , Meconema meridionale 
+autonome uitbreiding;;4;Neovison vison , Vespa velutina , Hygromia cinctella , Boettgerilla pallens 
+onbekend;;176;Arachis hypogaea , Oryctolagus cuniculus , Boettgerilla pallens , Phoneutria nigriventer , Erigone dentosa 

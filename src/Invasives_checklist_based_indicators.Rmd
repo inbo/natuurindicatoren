@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+extensies <- c(".eps", ".jpeg", ".png")
 ```
 
 ```{r}
@@ -348,7 +349,7 @@ data_flanders_listed_class <-
   summarise(n = n_distinct(key))
 
 talen <- c("NL","EN","DE")
-extensies <- c(".eps", ".jpeg")
+
 for(taal in talen){
   if(taal == "NL"){
     p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_nl, n), y = n))
