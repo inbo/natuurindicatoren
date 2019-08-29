@@ -324,12 +324,28 @@ plot <-
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Aantal soorten") 
 
+plot2 <- 
+  data_flanders %>% 
+  filter(first_observed >= from) %>% 
+  distinct(key, kingdom, pathway_level1) %>% 
+  mutate(pathway_level1 = case_when(pathway_level1 == "natural" ~ "unaided",
+                                    TRUE ~ pathway_level1)) %>% 
+  mutate(kingdom = case_when(kingdom == "Animalia" ~ "Animals",
+                             kingdom == "Plantae" ~ "Plants")) %>% 
+  group_by(pathway_level1, kingdom) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
+  geom_col() +
+  coord_flip() + 
+  scale_x_discrete(NULL, expand = c(0,0)) + 
+  scale_y_continuous("Number of species") 
+
 for(e in extensies){
-  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
   ggsave( fn, plot, width = width, height = heigth)
 }
 
-
+print(plot2)
 
 ```
 
