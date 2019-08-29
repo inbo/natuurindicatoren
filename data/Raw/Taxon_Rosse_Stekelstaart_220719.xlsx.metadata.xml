@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ReportMetadata>
+  <RunBy userName="Sander Devisscher"/>
+  <RunOn date="22/07/2019" time="11:18:39"/>
+  <Database serverInstanceName="inbo-sql07-prd.inbo.be,1433" databaseName="D0017_00_NBNData"/>
+  <SQL>
+
+SELECT * from inbo.vw_Rossestekelstaart_taxondata
+
+
+</SQL>
+  <XMLReport name="Rosse stekelstaart Taxon Data" description="Rosse stekelstaart Taxon Data"/>
+</ReportMetadata>

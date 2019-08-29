@@ -1,0 +1,87 @@
+---
+title: "Overwinterende_Rosse_Stekels"
+author: "Sander Devisscher", "Tim Adriaens", "Koen Devos"
+date: "23 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Voorbereiding
+
+```{r libraries}
+library(INBOtheme)
+library(tidyverse)
+
+check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0)}
+```
+
+```{r Data}
+Nieuwe_Data <- read_delim("data/Raw/Rosse.Stekelstaart.watervogeltellingen.2016-2019_Tidy.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+Oude_Data <- read_delim("data/processed/RST_Aantal_Overwinterend.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r Nieuwe data klaarzetten}
+#dit stuk script filtert de winters die reeds in de oude data aanwezig zijn zodat deze niet worden verdubbeld
+laatste_winter <- Oude_Data[[nrow(Oude_Data), 1]]
+beginJaar_winter <- as.integer(substr(laatste_winter, 0,4))
+
+Nieuwe_Data2 <- Nieuwe_Data %>% 
+  filter(BeginJaar > beginJaar_winter) %>% 
+  group_by(Winter, Maand) %>% 
+  summarise(maandmaximum = sum(Aantal, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  spread(Maand, maandmaximum) %>% 
+  mutate(Maximum = apply(X = Nieuwe_Data2[,2:7], MARGIN = 1, FUN = max))
+
+colnames(Nieuwe_Data2) <- colnames(Oude_Data)
+```
+
+```{r Append Nieuwe Data to Oude Data}
+if(check(Nieuwe_Data2)==0){
+  Oude_Data2 <- Oude_Data
+  print("Geen Update")
+}else{
+  Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
+  print(nrow(Nieuwe_Data2))
+  write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
+}
+```
+
+```{r grafiekje}
+talen <- c("NL","EN","DE")
+extensies <- c(".eps", ".jpeg")
+for(taal in talen){
+  p <- ggplot(data = Oude_Data2, aes(x = Winter, y = Maximum))
+  p <- p + geom_col()
+  p <- p + scale_x_discrete(NULL)
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  if(taal == "NL"){
+    p <- p + scale_y_continuous("Aantal overwinterende rosse stekelstaarten",breaks = seq(0, 15, by = 2), limits = c(0,14), expand = c(0,0))
+  }else{
+    if(taal == "EN"){
+      p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+    }else{
+      print("WARNING: Translate y-axis, defaults to english")
+      p <- p + scale_y_continuous("Number of wintering ruddy ducks",breaks = seq(0, 15, by = 2), limits = c(0,14),expand = c(0,0))
+    }
+  }
+  p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
+  p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
+  for(extensie in extensies){
+    fn <- paste0("reports/figures/Overwinterende_rosse_stekelstaarten_", taal , extensie)
+    ggsave(fn, p)
+  }
+
+  print(p)
+}
+
+
+
+```
+

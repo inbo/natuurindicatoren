@@ -1,0 +1,15 @@
+pathway_level1;kingdom;n
+contaminant;Animals;40
+contaminant;Plants;145
+corridor;Animals;24
+corridor;Plants;6
+escape;Animals;47
+escape;Plants;360
+release;Animals;26
+release;Plants;5
+stowaway;Animals;74
+stowaway;Plants;10
+unaided;Animals;15
+unaided;Plants;6
+unknown;Animals;124
+unknown;Plants;52

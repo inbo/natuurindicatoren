@@ -1,5 +1,5 @@
-# Natuurindicatoren
-This Repo contains all non-Trias pipeline related indicators concerning non native species. Trias Pipeline related Indicators can be found [HERE](https://github.com/trias-project/indicators).
+# natuurindicatoren
+Calculation of the nature indicators for Flanders
 
 ## Repo structure
 
@@ -10,6 +10,7 @@ The repo structure is based on [cookiecutter-data-science](https://github.com/dr
     ├── LICENSE          : MIT License
     ├── data
     │   ├── processed    : Tidy format, not-aggregated data; allows to run the analysis from outside the INBO
+    |   ├── raw          : Unproccesed data from different sources   
     |   └── vocabularies : Mappings of data to standardize
     │
     ├── reports          : Generated output; no manual editing!
