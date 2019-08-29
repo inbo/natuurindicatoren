@@ -301,7 +301,7 @@ tabel_pathways_niveau1 <-
 
 write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
 
-plot <- 
+plot_data <- 
   data_flanders %>% 
   filter(first_observed >= from) %>% 
    distinct(key, kingdom, pathway_level1) %>% 
@@ -317,14 +317,17 @@ plot <-
   mutate(kingdom = case_when(kingdom == "Animalia" ~ "Dieren",
                              kingdom == "Plantae" ~ "Planten")) %>% 
   group_by(introductieweg, kingdom) %>% 
-  summarise(n = n()) %>% 
+  summarise(n = n()) 
+
+plot <- 
+  plot_data %>% 
   ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
   geom_col() +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Aantal soorten") 
 
-plot2 <- 
+plot_data2 <- 
   data_flanders %>% 
   filter(first_observed >= from) %>% 
   distinct(key, kingdom, pathway_level1) %>% 
@@ -333,7 +336,10 @@ plot2 <-
   mutate(kingdom = case_when(kingdom == "Animalia" ~ "Animals",
                              kingdom == "Plantae" ~ "Plants")) %>% 
   group_by(pathway_level1, kingdom) %>% 
-  summarise(n = n()) %>% 
+  summarise(n = n()) 
+
+plot2 <- 
+  plot_data2%>% 
   ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
   geom_col() +
   coord_flip() + 
@@ -341,9 +347,14 @@ plot2 <-
   scale_y_continuous("Number of species") 
 
 for(e in extensies){
-  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
   ggsave( fn, plot, width = width, height = heigth)
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
+  ggsave( fn, plot2, width = width, height = heigth)
 }
+
+write_delim(plot_data, "./data/processed/Invasives_pathways_kingdom_data_nl.csv", ";")
+write_delim(plot_data2, "./data/processed/Invasives_pathways_kingdom_data_en.csv", ";")
 
 print(plot2)
 
