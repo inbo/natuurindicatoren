@@ -15,6 +15,7 @@ library(trias)
 library(rgbif)
 library(tidyverse)
 library(INBOtheme)
+library(knitr)
 ```
 
 ```{r Get Data}
@@ -209,7 +210,7 @@ tabel_pathways_beide <-
          voorbeelden = examples) %>% 
   mutate(introductieweg_niveau1 = case_when(introductieweg_niveau1 == "contaminant" ~ "besmetting",
                                             introductieweg_niveau1 == "escape" ~ "ontsnapping",
-                                            introductieweg_niveau1 == "natural" ~ "natuurlijk",
+                                            introductieweg_niveau1 == "natural" ~ "autonome uitbreiding",
                                             introductieweg_niveau1 == "release" ~ "uitzetting",
                                             introductieweg_niveau1 == "stowaway" ~ "verstekeling",
                                             introductieweg_niveau1 == "unaided" ~ "autonome uitbreiding",
@@ -244,10 +245,12 @@ tabel_pathways_beide <-
                                             introductieweg_niveau2 == "zoo" ~ "dierentuin",
                                             introductieweg_niveau2 == "fur_farm" ~ "bontfokkerij",
                                             introductieweg_niveau2 == "conservation" ~ "natuurbescherming",
-                                            TRUE ~ introductieweg_niveau2))
+                                            introductieweg_niveau1 == "autonome uitbreiding" & introductieweg_niveau2 == "" ~ "verspreiding",
+                                            TRUE ~ introductieweg_niveau2)) %>% 
+  group_by(introductieweg_niveau1, introductieweg_niveau2) %>% 
+  summarise(n = sum(n), first(voorbeelden))
 
 write_delim(tabel_pathways_beide, "data/processed/tabel_pathways_beide.csv", delim = ";")
-
 
 #Tabel met enkel level 1 pathways
 #Onderstaand script maakt een lijst met voorbeelden
@@ -287,12 +290,14 @@ tabel_pathways_niveau1 <-
          voorbeelden = examples) %>% 
   mutate(introductieweg = case_when(introductieweg == "contaminant" ~ "besmetting",
                                             introductieweg == "escape" ~ "ontsnapping",
-                                            introductieweg == "natural" ~ "natuurlijk",
+                                            introductieweg == "natural" ~ "autonome uitbreiding",
                                             introductieweg == "release" ~ "uitzetting",
                                             introductieweg == "stowaway" ~ "verstekeling",
                                             introductieweg == "unaided" ~ "autonome uitbreiding",
                                             introductieweg == "unknown" ~ "onbekend", 
-                                            TRUE ~ introductieweg))
+                                            TRUE ~ introductieweg)) %>% 
+  group_by(introductieweg) %>% 
+  summarise(n = sum(n), first(voorbeelden))
 
 write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
 
