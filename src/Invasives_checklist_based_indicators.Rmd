@@ -235,7 +235,7 @@ tabel_pathways_beide <-
                                             introductieweg_niveau2 == "organic_packing" ~ "organische verpakking",
                                             introductieweg_niveau2 == "ornamental" ~ "decoratief",
                                             introductieweg_niveau2 == "other" ~ "andere",
-                                            introductieweg_niveau2 == "people_luggage" ~ "mensen en hun baggage",
+                                            introductieweg_niveau2 == "people_luggage" ~ "mensen en hun bagage",
                                             introductieweg_niveau2 == "pet" ~ "huisdier",
                                             introductieweg_niveau2 == "research" ~ "onderzoek",
                                             introductieweg_niveau2 == "seed" ~ "zaden",
@@ -300,6 +300,36 @@ tabel_pathways_niveau1 <-
   summarise(n = sum(n), first(voorbeelden))
 
 write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
+
+plot <- 
+  data_flanders %>% 
+  filter(first_observed >= from) %>% 
+   distinct(key, kingdom, pathway_level1) %>% 
+   rename(introductieweg = pathway_level1) %>% 
+   mutate(introductieweg = case_when(introductieweg == "contaminant" ~ "besmetting",
+                                            introductieweg == "escape" ~ "ontsnapping",
+                                            introductieweg == "natural" ~ "autonome uitbreiding",
+                                            introductieweg == "release" ~ "uitzetting",
+                                            introductieweg == "stowaway" ~ "verstekeling",
+                                            introductieweg == "unaided" ~ "autonome uitbreiding",
+                                            introductieweg == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg)) %>% 
+  mutate(kingdom = case_when(kingdom == "Animalia" ~ "Dieren",
+                             kingdom == "Plantae" ~ "Planten")) %>% 
+  group_by(introductieweg, kingdom) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
+  geom_col() +
+  coord_flip() + 
+  scale_x_discrete(NULL, expand = c(0,0)) + 
+  scale_y_continuous("Aantal soorten") 
+
+for(e in extensies){
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
+  ggsave( fn, plot, width = width, height = heigth)
+}
+
+
 
 ```
 
