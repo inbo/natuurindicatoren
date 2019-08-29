@@ -1,40 +1,40 @@
 pathway_level1;pathway_level2;n;examples
-contaminant;;17;Campylopus introflexus , Dreissena bugensis , Proterorhinus semilunaris , Pseudorasbora parva , Pimephales promelas 
-contaminant;animal_parasite;5;Anguillicoloides crassus Kuwahara Niimi  Itagaki 1974 Moravec  Taraschewski 1988, Gyrodactylus proterorhini , Enderleinellus kumadai , Mastophorus , Hoplopleura erismata 
+contaminant;;17;Neogobius melanostomus , Corbicula fluminea , Rattus norvegicus , Pimephales promelas , Sinanodonta woodiana 
+contaminant;animal_parasite;5;Mastophorus , Anguillicoloides crassus Kuwahara Niimi  Itagaki 1974 Moravec  Taraschewski 1988, Enderleinellus kumadai , Hoplopleura erismata , Gyrodactylus proterorhini 
 contaminant;food;1;Chaetopelma olivaceum 
-contaminant;habitat_material;18;Odontites jaubertianus Boreau DDietr ex Walpers, Eumodicogryllus bordigalensis , Umbilicus rupestris Salisb Dandy, Marionfyfea adventor , Oenothera moravica 
-contaminant;nursery;9;Axonopus fissifolius Raddi Kuhlm, Wolffia columbiana , Pilea microphylla , Cardamine corymbosa , Acalypha indica 
-contaminant;on_animals;7;Nicotiana glauca , Juncus canadensis , Bolboschoenus yagara Ohwi YCYang  MZhan, Juncus foliosus , Sinanodonta woodiana 
-contaminant;on_plants;15;Linepithema humile , Diestrammena asynamora , Lasius neglectus , Pseudagrion microcephalum , Paysandisia archon 
-contaminant;seed;117;Zingeria pisidica Boiss Tutin, Solanum viarum , Caylusea abyssinica , Silene behen , Sida spinosa 
-contaminant;timber;3;Melampyrum nemorosum , Carex loliacea , Camponotus vagus 
-corridor;;17;Paspalum distichum , Proterorhinus semilunaris , Campylopus introflexus , Ctenopharyngodon idella , Neogobius melanostomus 
-corridor;water;16;Jaera istri , Limnomysis benedeni , Neogobius fluviatilis , Corbicula fluminea , Dendrocoelum romanodanubiale 
-escape;;17;Cortaderia selloana , Rattus norvegicus , Clarias gariepinus , Procyon lotor , Tamias sibiricus 
-escape;agriculture;4;Crambe hispanica subsp abyssinica Hochst ex REFr APrina, Glycine max L Merr, Valerianella locusta var oleracea Schltdl Breistr, Vigna radiata L RWilczek
-escape;aquaculture;14;Pacifastacus leniusculus , Sinanodonta woodiana , Acipenser ruthenus , Oreochromis niloticus , Magallana gigas 
-escape;food_bait;13;Cyperus rotundus , Pastinaca sativa subsp sativa, Cucurbita moschata , Pimephales promelas , Cucurbita maxima Duchesne Duchesne ex Poir
+contaminant;habitat_material;18;Oenothera moravica , Marionfyfea adventor , Odontites jaubertianus Boreau DDietr ex Walpers, Amphiachyris dracunculoides DC Nutt, Umbilicus rupestris Salisb Dandy
+contaminant;nursery;9;Pilea hyalina , Wolffia columbiana , Linaria triornithophora L Willd, Phyllanthus tenellus , Cuscuta suaveolens 
+contaminant;on_animals;7;Juncus foliosus , Monocorophium sextonae , Juncus canadensis , Eleocharis engelmannii , Bolboschoenus yagara Ohwi YCYang  MZhan
+contaminant;on_plants;15;Anoplophora chinensis , Cameraria gaultheriella , Lasius neglectus , Paysandisia archon , Boettgerilla pallens 
+contaminant;seed;117;Senna occidentalis L Link, Trigonella arabica , Cenchrus echinatus , Medicago monspeliaca , Ipomoea hederacea var hederacea
+contaminant;timber;3;Camponotus vagus , Melampyrum nemorosum , Carex loliacea 
+corridor;;17;Proterorhinus semilunaris , Neogobius melanostomus , Dreissena bugensis , Hypophthalmichthys molitrix , Eichhornia crassipes 
+corridor;water;16;Chelicorophium curvispinum , Gammarus tigrinus , Ponticola kessleri , Proterorhinus semilunaris , Neogobius melanostomus 
+escape;;17;Ondatra zibethicus , Hypophthalmichthys molitrix , Callosciurus erythraeus , Magallana gigas , Egeria densa 
+escape;agriculture;4;Glycine max L Merr, Valerianella locusta var oleracea Schltdl Breistr, Vigna radiata L RWilczek, Crambe hispanica subsp abyssinica Hochst ex REFr APrina
+escape;aquaculture;14;Clarias gariepinus , Acipenser gueldenstaedtii , Caprella mutica , Pacifastacus leniusculus , Sinelobus vanhaareni 
+escape;food_bait;13;Pastinaca sativa subsp sativa, Cucurbita maxima Duchesne Duchesne ex Poir, Cucumis sativus , Ballerus ballerus , Allium ramosum 
 escape;fur_farm;1;Neovison vison 
-escape;horticulture;347;Rheum rhabarbarum , Colutea media , Ilex crenata , Spiraea nipponica , Artemisia campestris subsp maritima DC Arcang
-escape;ornamental;3;Acipenser ruthenus , Acipenser gueldenstaedtii , Acipenser baerii 
-escape;pet;24;Pontastacus leptodactylus , Orconectes limosus , Nasua nasua , Cipangopaludina chinensis , Trachemys scripta elegans 
+escape;horticulture;347;Dryopteris erythrosora Eat Kuntze, Persicaria capitata BuchHam ex DDon HGross, Festuca gautieri Hack KRicht, Heliopsis helianthoides , Acanthus spinosus 
+escape;ornamental;3;Acipenser gueldenstaedtii , Acipenser baerii , Acipenser ruthenus 
+escape;pet;24;Cipangopaludina chinensis , Meriones unguiculatus , Massylaea vermiculata , Nasua nasua , Orconectes limosus 
 escape;research;1;Massylaea vermiculata 
 escape;zoo;2;Tamias sibiricus , Callosciurus erythraeus 
-natural;dispersal;17;Nyctereutes procyonoides , Campylopus introflexus , Paspalum distichum , Ensis directus , Magallana gigas 
-release;;17;Eichhornia crassipes , Pseudorasbora parva , Clarias gariepinus , Tamias sibiricus , Akebia quinata 
-release;biological_control;6;Hypophthalmichthys nobilis , Rhyzobius lophanthae , Rhyzobius forestieri , Hypophthalmichthys molitrix , Ctenopharyngodon idella 
+natural;dispersal;17;Procyon lotor , Ondatra zibethicus , Paspalum distichum , Eichhornia crassipes , Campylopus introflexus 
+release;;17;Cortaderia selloana , Hypophthalmichthys molitrix , Myocastor coypus , Cabomba caroliniana , Pimephales promelas 
+release;biological_control;6;Harmonia axyridis , Hypophthalmichthys nobilis , Hypophthalmichthys molitrix , Ctenopharyngodon idella , Rhyzobius forestieri 
 release;conservation;1;Natrix helvetica 
 release;hunting;1;Muntiacus reevesi 
-release;landscape_improvement;3;Pleurodeles waltl , Triturus marmoratus , Natrix helvetica 
-release;other;6;Graptemys pseudogeographica kohnii , Trachemys scripta elegans , Graptemys pseudogeographica pseudogeographica, Trachemys scripta scripta, Trachemys scripta troostii 
-stowaway;;20;Trochoidea elegans , Magallana gigas , Campylopus introflexus , Corbicula fluminea , Rattus norvegicus 
-stowaway;ballast_water;28;Laonome calida , Neogobius fluviatilis , Marenzelleria neglecta , Hemimysis anomala , Marenzelleria viridis 
-stowaway;container;14;Callobius nomeus , Plexippus paykulli , Latrodectus geometricus , Latrodectus mactans , Neoscona nautica 
-stowaway;hull_fouling;12;Amphibalanus amphitrite , Crangonyx pseudogracilis , Ficopomatus enigmaticus , Caprella mutica , Austrominius modestus 
+release;landscape_improvement;3;Pleurodeles waltl , Natrix helvetica , Triturus marmoratus 
+release;other;6;Trachemys scripta elegans , Trachemys scripta scripta, Trachemys scripta troostii , Graptemys pseudogeographica kohnii , Pachytriton labiatus 
+stowaway;;20;Sinanodonta woodiana , Dreissena bugensis , Neogobius melanostomus , Ensis directus , Paspalum distichum 
+stowaway;ballast_water;28;Bratislavia dadayi , Monocorophium sextonae , Rangia cuneata , Gobiosoma bosc , Incisocalliope aestuarius 
+stowaway;container;14;Latrodectus geometricus , Plexippus paykulli , Latrodectus hesperus , Massylaea vermiculata , Callobius nomeus 
+stowaway;hull_fouling;12;Amphibalanus reticulatus , Megabalanus coccopoma , Sinelobus vanhaareni , Caprella mutica , Hypania invalida 
 stowaway;organic_packing;1;Anoplophora glabripennis 
-stowaway;other;9;Hemimysis anomala , Ensis directus , Aedes albopictus , Proasellus coxalis , Anacridium aegyptium 
-stowaway;people_luggage;7;Paronychia argentea , Trifolium nigrescens , Cernuella aginnica , Parentucellia latifolia L Caruel, Xerocincta neglecta 
+stowaway;other;9;Girardia tigrina , Callinectes sapidus , Hemimysis anomala , Anacridium aegyptium , Aedes koreicus 
+stowaway;people_luggage;7;Cernuella aginnica , Poa infirma , Trifolium suffocatum , Paronychia argentea , Xerocincta neglecta 
 stowaway;ship;1;Massylaea vermiculata 
-stowaway;vehicles;4;Cernuella aginnica , Xerocincta neglecta , Eumodicogryllus bordigalensis , Meconema meridionale 
-unaided;;4;Neovison vison , Vespa velutina , Hygromia cinctella , Boettgerilla pallens 
-unknown;;176;Arachis hypogaea , Oryctolagus cuniculus , Boettgerilla pallens , Phoneutria nigriventer , Erigone dentosa 
+stowaway;vehicles;4;Xerocincta neglecta , Cernuella aginnica , Eumodicogryllus bordigalensis , Meconema meridionale 
+unaided;;4;Boettgerilla pallens , Vespa velutina , Hygromia cinctella , Neovison vison 
+unknown;;176;Crepis bursifolia , Tragopogon mirabilis , Reductoniscus costulatus , Melita nitida , Heliotropium suaveolens 

@@ -1,9 +1,8 @@
-introductieweg;n;voorbeelden
-besmetting;192;Commelina diffusa ,Solanum ptychanthum ,Agrostis fouilladeana ,Panicum miliaceum ,Medicago monspeliaca 
-corridor;33;Pseudorasbora parva ,Dendrocoelum romanodanubiale ,Menetus dilatatus ,Akebia quinata ,Eichhornia crassipes 
-ontsnapping;426;Symphoricarpos orbiculatus ,Vigna radiata L RWilczek,Heliopsis helianthoides ,Rubus cockburnianus ,Onopordum macracanthum 
-natuurlijk;17;Dreissena bugensis ,Campylopus introflexus ,Rhaponticum repens L Hidalgo,Magallana gigas ,Nyctereutes procyonoides 
-uitzetting;34;Myocastor coypus ,Ondatra zibethicus ,Pleurodeles waltl ,Neovison vison ,Pseudorasbora parva 
-verstekeling;96;Tasserkidrilus americanus ,Incisocalliope aestuarius ,Massylaea vermiculata ,Rhaponticum repens L Hidalgo,Plexippus paykulli 
-autonome uitbreiding;4;Boettgerilla pallens ,Neovison vison ,Vespa velutina ,Hygromia cinctella 
-onbekend;176;Cryptachaea blattea ,Oryctolagus cuniculus ,Erigeron flahaultianus ,Bugula neritina ,Ammannia coccinea 
+introductieweg;n;first(voorbeelden)
+autonome uitbreiding;21;Procyon lotor ,Eichhornia crassipes ,Nyctereutes procyonoides ,Magallana gigas ,Ondatra zibethicus 
+besmetting;192;Echinochloa inundata ,Cardiospermum halicacabum ,Trifolium pallidum ,Gyrodactylus proterorhini ,Cardamine corymbosa 
+corridor;33;Ponticola kessleri ,Gammarus tigrinus ,Nyctereutes procyonoides ,Akebia quinata ,Neogobius melanostomus 
+onbekend;176;Carex vulpinoidea ,Juncus xiphioides ,Rumex hybridus ,Holocnemus pluchei ,Ziziphus lotus 
+ontsnapping;426;Acer rubrum ,Armeria arenaria ,Phyllostachys viridiglaucescens ,Eutrochium maculatum L EELamont,Ligularia dentata AGray Hara
+uitzetting;34;Trachemys scripta scripta,Myocastor coypus ,Cortaderia selloana ,Pachytriton labiatus ,Egeria densa 
+verstekeling;96;Corbicula fluminalis ,Trifolium suffocatum ,Ficopomatus enigmaticus ,Callinectes sapidus ,Anacridium aegyptium 
