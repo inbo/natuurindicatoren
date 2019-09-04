@@ -13,10 +13,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r libraries}
 library(INBOtheme)
+library(DBI)
+library(odbc)
 library(tidyverse)
 
 check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0)}
 ```
+
+```{r Connect with databank}
+con <- dbConnect(odbc::odbc(),
+                 Driver = "SQL Server Native Client 11.0",
+                 Server = "inbo-sql08-prd.inbo.be",
+                 Database = "W0004_00_Waterbirds",
+                 Trusted_Connection="yes") 
+```
+
 
 ```{r Data}
 Nieuwe_Data <- read_delim("data/Raw/Rosse.Stekelstaart.watervogeltellingen.2016-2019_Tidy.csv", 
