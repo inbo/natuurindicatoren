@@ -30,10 +30,10 @@ con <- dbConnect(odbc::odbc(),
 
 
 ```{r Data}
-Nieuwe_Data <- read_delim("data/Raw/Rosse.Stekelstaart.watervogeltellingen.2016-2019_Tidy.csv", 
-    ";", escape_double = FALSE, trim_ws = TRUE)
+Nieuwe_Data <- dbGetQuery(con,
+                          "SELECT  FROM [dbo].[FactTaxonOccurrence]")
 
-Oude_Data <- read_delim("data/processed/RST_Aantal_Overwinterend.csv", 
+ Oude_Data <- read_delim("data/processed/RST_Aantal_Overwinterend.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
 ```
 
