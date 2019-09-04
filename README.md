@@ -9,7 +9,9 @@ The repo structure is based on [cookiecutter-data-science](https://github.com/dr
     ├── Makefile         : File to rerun get-data or reports
     ├── LICENSE          : MIT License
     ├── data
-    │   └── processed    : Tidy format, not-aggregated data; allows to run the analysis from outside the INBO
+    │   ├── processed    : Tidy format, not-aggregated data; allows to run the analysis from outside the INBO
+    |   ├── raw          : Unproccesed data from different sources   
+    |   └── vocabularies : Mappings of data to standardize
     │
     ├── reports          : Generated output; no manual editing!
     │   ├── html         : HTML report for each indicator
@@ -28,18 +30,22 @@ The repo structure is based on [cookiecutter-data-science](https://github.com/dr
     │
     ├── requirements.txt : Requirements file for reproducing the analysis environment
     │
-    └── src              : All source code for this project
-        ├── utils        : Reusable functions, applicable for multiple reports 
-        |   └── ...
-        |
-        ├── get-data     : Scripts to generate processed data from raw data for each indicator
-        │   ├── europese-vlinderindex-graslanden.R
-        │   ├── aantal-verkochte-visverloven.R
-        │   └── ...
-        |
-        ├── europese-vlinderindex-graslanden.Rmd 
-        └── aantal-verkochte-visverloven.Rmd
-
+    |── src              : All source code for this project
+    |   ├── utils        : Reusable functions, applicable for multiple reports 
+    |   |   └── ...
+    |   |
+    |   ├── get-data     : Scripts to generate processed data from raw data for each indicator
+    |   │   ├── europese-vlinderindex-graslanden.R
+    |   │   ├── aantal-verkochte-visverloven.R
+    |   │   └── ...
+    |   |
+    |   ├── europese-vlinderindex-graslanden.Rmd 
+    |   └── aantal-verkochte-visverloven.Rmd
+    |
+    |__ information      : Papers, useful documents or guidelines. Make names of papers consistent
+    
+    
+    
 ## Rendering
 
 In order to make the rendering of the `.Rmd` file to the proper reports/html folder, use the rmarkdwon `render` function instead of the knitr-button, as follows (for the vlinderindex example):

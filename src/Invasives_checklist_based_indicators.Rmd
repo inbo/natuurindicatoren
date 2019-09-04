@@ -1,0 +1,441 @@
+---
+title: "Invasives_checklist_based_indicators"
+author: "Sander Devisscher, Tim Adriaens"
+date: "29 juli 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+extensies <- c(".eps", ".jpeg", ".png")
+```
+
+```{r}
+library(trias)
+library(rgbif)
+library(tidyverse)
+library(INBOtheme)
+library(knitr)
+```
+
+```{r Get Data}
+#Script van Damiano zie issue #60 van trias-project/indicators (https://github.com/trias-project/indicators/issues/60)
+
+#read taxon data
+taxon <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/taxon.csv",
+  na = "")
+
+#read distribution data
+distribution <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/distribution.csv",
+  na = "")
+
+#read description data
+description <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/description.csv",
+  na = "")
+
+#read species profile data
+speciesProfile <- read_csv(
+  "https://raw.githubusercontent.com/trias-project/unified-checklist/include-distribution-regions/data/processed/speciesprofile.csv",
+  na = "")
+
+# We *tidy* this data.frame, thus having different descriptors as different columns
+description <- spread_with_multiple_values(data = description,
+                                           key = type,
+                                           value = description)
+description %>% head(n = 10)
+
+# Merge distribution, description and species profile information
+merged_extensions <- 
+  full_join(distribution %>% select(-c(source)),
+            description %>% select(-c(source, language)),
+            by = "taxonID") %>%
+  full_join(speciesProfile,
+            by = "taxonID")
+merged_info <- left_join(taxon, merged_extensions,
+                         by = "taxonID")
+# remove "https://www.gbif.org/species/" from all taxonIDs
+merged_info <-
+  merged_info %>%
+  mutate(key = sub(".*//www.gbif.org/species/", "", taxonID))
+
+# Split column `eventDate`
+merged_info <-
+  merged_info %>% separate(col = eventDate,
+                           sep = "/",
+                           into = c("first_observed", "last_observed"),
+                           convert = TRUE,
+                           fill = "right",
+                           remove = TRUE) %>%
+  mutate(last_observed = ifelse(is.na(last_observed),
+                                first_observed,
+                                last_observed))
+
+# Example
+merged_info %>% 
+  filter(locality == "Belgium") %>% 
+  select(key, first_observed, last_observed) %>%
+  distinct() %>%
+  filter(!is.na(first_observed) & !is.na(last_observed)) %>%
+  head()
+
+# The column `pathway` contains a prefix, `cbd_2014_pathway:` and two different pathway levels divided by symbol `_`
+merged_info %>% distinct(pathway) %>% filter(!is.na(pathway)) %>% head()
+
+# Split `pathway` in `pathway_level1` and `pathway_level2`
+merged_info <-
+  merged_info %>% 
+  rowwise() %>%
+  mutate(pathway_level1 = 
+           str_split_fixed(
+             str_split(pathway,
+                       pattern = "pathway:")[[1]][2],
+             pattern = "_", n = 2)[[1]][1],
+         pathway_level2 = 
+           str_split_fixed(
+             str_split(pathway,pattern = "pathway:")[[1]][2],
+             pattern = "_", n = 2)[[2]][1]) %>%
+  ungroup() %>%
+  select(-pathway) 
+
+```
+
+```{r indicator_total_year}
+table(merged_info$locality, useNA = "ifany")
+
+kingdoms <- c("Animalia", "Plantae")
+habitats <- c("freshwater", "freshwater|terrestrial", "marine", "marine|freshwater", "terrestrial")
+
+data_flanders_en <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  filter(habitat %in% habitats) %>%
+  distinct(key, habitat, first_observed, kingdom) %>% 
+  mutate(habitat = case_when(habitat == "freshwater|terrestrial" ~ "estuarine",
+                             habitat == "marine|freshwater" ~ "estuarine",
+                             TRUE ~ habitat))
+
+sum(!is.na(data_flanders_en$first_observed))
+sum(!is.na(data_flanders_en$habitat))
+temp <- data_flanders_en %>% filter(!is.na(first_observed))
+table(temp$kingdom, temp$habitat)
+
+data_flanders_nl <- 
+  data_flanders_en %>% 
+  mutate(habitat = case_when(habitat == "freshwater" ~ "zoetwater",
+                             habitat == "estuarine" ~ "estuarien",
+                             habitat == "marine" ~ "marien",
+                             habitat == "estuarine" ~ "estuarien", 
+                             habitat == "terrestrial" ~ "terrestrisch"))
+
+p_en <- indicator_introduction_year(data_flanders_en, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed")
+
+p_nl <- indicator_introduction_year(data_flanders_nl, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed",
+                                 x_lab = "Jaar", y_lab = "Aantal geïntroduceerde invasieve soorten") 
+
+p_nl_cum <- indicator_total_year(data_flanders_nl, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed",
+                                 x_lab = "Jaar", y_lab = "Gecumuleerd aantal invasieve soorten") 
+
+p_en_cum <- indicator_total_year(data_flanders_en, start_year_plot = 1950,
+                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+                                 facet_column = "habitat", first_observed = "first_observed") 
+width <- 10
+heigth <- 10
+
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl , width = width, height = heigth)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum , width = width, height = heigth)
+
+data_flanders_stats <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  filter(habitat %in% habitats) %>%
+  distinct(key, habitat, first_observed, kingdom, `invasion stage`) %>% 
+  filter(!is.na(`invasion stage`))
+
+table(data_flanders_stats$habitat, data_flanders_stats$kingdom, data_flanders_stats$`invasion stage`)
+
+```
+
+```{r pathways}
+from <- 1950
+n_species <- 5
+
+data_flanders <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  filter(kingdom %in% kingdoms) %>% 
+  distinct(key, pathway_level1, pathway_level2, scientificNameAuthorship, scientificName, kingdom, phylum, first_observed) %>% 
+  mutate(pathway_level1 = case_when(pathway_level1 == "" ~ "unknown",
+                                    TRUE ~ pathway_level1)) %>% 
+  mutate(scientificNameAuthorship = case_when(is.na(scientificNameAuthorship) ~ "",
+                                              TRUE ~ scientificNameAuthorship))
+
+
+for(i in 1:nrow(data_flanders)){
+  a <- data_flanders$scientificNameAuthorship[i]
+  data_flanders$canonicalName[i] <- gsub(pattern = a, replacement = "", data_flanders$scientificName[i])
+  data_flanders$canonicalName[i] <- gsub(pattern = "[[:punct:]]", replacement = "", data_flanders$canonicalName[i])
+}
+  
+
+table_pathways_both <- get_table_pathways(data_flanders, 
+                                          from = from,
+                                          kingdom_names = "kingdom", 
+                                          phylum_names = "phylum", 
+                                          species_names = "canonicalName",
+                                          n_species = n_species)
+
+write_delim(table_pathways_both, "data/processed/table_pathways_both.csv", delim = ";")
+
+
+
+tabel_pathways_beide <- 
+  table_pathways_both %>% 
+  rename(introductieweg_niveau1 = pathway_level1,
+         introductieweg_niveau2 = pathway_level2,
+         voorbeelden = examples) %>% 
+  mutate(introductieweg_niveau1 = case_when(introductieweg_niveau1 == "contaminant" ~ "besmetting",
+                                            introductieweg_niveau1 == "escape" ~ "ontsnapping",
+                                            introductieweg_niveau1 == "natural" ~ "autonome uitbreiding",
+                                            introductieweg_niveau1 == "release" ~ "uitzetting",
+                                            introductieweg_niveau1 == "stowaway" ~ "verstekeling",
+                                            introductieweg_niveau1 == "unaided" ~ "autonome uitbreiding",
+                                            introductieweg_niveau1 == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg_niveau1)) %>% 
+  mutate(introductieweg_niveau2 = case_when(introductieweg_niveau2 == "agriculture" ~ "landbouw",
+                                            introductieweg_niveau2 == "animal_parasite" ~ "dierlijke parasiet",
+                                            introductieweg_niveau2 == "aquaculture" ~ "aquacultuur",
+                                            introductieweg_niveau2 == "ballast_water" ~ "ballast water",
+                                            introductieweg_niveau2 == "biological_control" ~ "biologische bestrijding",
+                                            introductieweg_niveau2 == "dispersal" ~ "verspreiding",
+                                            introductieweg_niveau2 == "food" ~ "voeder",
+                                            introductieweg_niveau2 == "food_bait" ~ "lokaas",
+                                            introductieweg_niveau2 == "habitat_material" ~ "habitat materiaal",
+                                            introductieweg_niveau2 == "horticulture" ~ "tuinbouw",
+                                            introductieweg_niveau2 == "hull_fouling" ~ "romp vervuiling",
+                                            introductieweg_niveau2 == "hunting" ~ "jacht",
+                                            introductieweg_niveau2 == "landscape_improvement" ~ "landschap verbetering",
+                                            introductieweg_niveau2 == "nursery" ~ "kwekerij",
+                                            introductieweg_niveau2 == "on_animals" ~ "op dieren",
+                                            introductieweg_niveau2 == "on_plants" ~ "op planten",
+                                            introductieweg_niveau2 == "organic_packing" ~ "organische verpakking",
+                                            introductieweg_niveau2 == "ornamental" ~ "decoratief",
+                                            introductieweg_niveau2 == "other" ~ "andere",
+                                            introductieweg_niveau2 == "people_luggage" ~ "mensen en hun bagage",
+                                            introductieweg_niveau2 == "pet" ~ "huisdier",
+                                            introductieweg_niveau2 == "research" ~ "onderzoek",
+                                            introductieweg_niveau2 == "seed" ~ "zaden",
+                                            introductieweg_niveau2 == "ship" ~ "scheepvaart",
+                                            introductieweg_niveau2 == "timber" ~ "houthandel",
+                                            introductieweg_niveau2 == "vehicles" ~ "voertuig",
+                                            introductieweg_niveau2 == "zoo" ~ "dierentuin",
+                                            introductieweg_niveau2 == "fur_farm" ~ "bontfokkerij",
+                                            introductieweg_niveau2 == "conservation" ~ "natuurbescherming",
+                                            introductieweg_niveau1 == "autonome uitbreiding" & introductieweg_niveau2 == "" ~ "verspreiding",
+                                            TRUE ~ introductieweg_niveau2)) %>% 
+  group_by(introductieweg_niveau1, introductieweg_niveau2) %>% 
+  summarise(n = sum(n), first(voorbeelden))
+
+write_delim(tabel_pathways_beide, "data/processed/tabel_pathways_beide.csv", delim = ";")
+
+#Tabel met enkel level 1 pathways
+#Onderstaand script maakt een lijst met voorbeelden
+pathways <- unique(table_pathways_both$pathway_level1)
+temp2 <- data.frame()
+
+for(p in pathways){
+  temp <- 
+  data_flanders %>% 
+    filter(pathway_level1 == p) %>% 
+    filter(first_observed >= from)
+  if(nrow(temp) >= n_species){
+    species <- sample_n(temp, size = n_species)
+  }else{
+    species <- sample_n(temp, size = nrow(temp))
+  }
+  temp2 <- rbind(species, temp2)
+}
+
+species_examples <- 
+  temp2 %>% 
+  group_by(pathway_level1) %>% 
+  summarize(examples = paste(canonicalName, collapse = ","))
+
+#Onderstaand script maak een tabel met per pathway het aantal soorten (zndr voorbeelden) en voegt dan de voorbeelden er aan toe
+table_pathways_level1 <- 
+  table_pathways_both %>% 
+  group_by(pathway_level1) %>% 
+  summarise(n = sum(n)) %>% 
+  left_join(y = species_examples, by = "pathway_level1")
+
+write_delim(table_pathways_level1, "data/processed/table_pathways_level1.csv", delim = ";")
+
+tabel_pathways_niveau1 <- 
+  table_pathways_level1 %>% 
+  rename(introductieweg = pathway_level1,
+         voorbeelden = examples) %>% 
+  mutate(introductieweg = case_when(introductieweg == "contaminant" ~ "besmetting",
+                                            introductieweg == "escape" ~ "ontsnapping",
+                                            introductieweg == "natural" ~ "autonome uitbreiding",
+                                            introductieweg == "release" ~ "uitzetting",
+                                            introductieweg == "stowaway" ~ "verstekeling",
+                                            introductieweg == "unaided" ~ "autonome uitbreiding",
+                                            introductieweg == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg)) %>% 
+  group_by(introductieweg) %>% 
+  summarise(n = sum(n), first(voorbeelden))
+
+write_delim(tabel_pathways_niveau1, "data/processed/tabel_pathways_level1.csv", delim = ";")
+
+plot_data <- 
+  data_flanders %>% 
+  filter(first_observed >= from) %>% 
+   distinct(key, kingdom, pathway_level1) %>% 
+   rename(introductieweg = pathway_level1) %>% 
+   mutate(introductieweg = case_when(introductieweg == "contaminant" ~ "besmetting",
+                                            introductieweg == "escape" ~ "ontsnapping",
+                                            introductieweg == "natural" ~ "autonome uitbreiding",
+                                            introductieweg == "release" ~ "uitzetting",
+                                            introductieweg == "stowaway" ~ "verstekeling",
+                                            introductieweg == "unaided" ~ "autonome uitbreiding",
+                                            introductieweg == "unknown" ~ "onbekend", 
+                                            TRUE ~ introductieweg)) %>% 
+  mutate(kingdom = case_when(kingdom == "Animalia" ~ "Dieren",
+                             kingdom == "Plantae" ~ "Planten")) %>% 
+  group_by(introductieweg, kingdom) %>% 
+  summarise(n = n()) 
+
+plot <- 
+  plot_data %>% 
+  ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
+  geom_col() +
+  coord_flip() + 
+  scale_x_discrete(NULL, expand = c(0,0)) + 
+  scale_y_continuous("Aantal soorten") 
+
+plot_data2 <- 
+  data_flanders %>% 
+  filter(first_observed >= from) %>% 
+  distinct(key, kingdom, pathway_level1) %>% 
+  mutate(pathway_level1 = case_when(pathway_level1 == "natural" ~ "unaided",
+                                    TRUE ~ pathway_level1)) %>% 
+  mutate(kingdom = case_when(kingdom == "Animalia" ~ "Animals",
+                             kingdom == "Plantae" ~ "Plants")) %>% 
+  group_by(pathway_level1, kingdom) %>% 
+  summarise(n = n()) 
+
+plot2 <- 
+  plot_data2%>% 
+  ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
+  geom_col() +
+  coord_flip() + 
+  scale_x_discrete(NULL, expand = c(0,0)) + 
+  scale_y_continuous("Number of species") 
+
+for(e in extensies){
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
+  ggsave( fn, plot, width = width, height = heigth)
+  fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
+  ggsave( fn, plot2, width = width, height = heigth)
+}
+
+write_delim(plot_data, "./data/processed/Invasives_pathways_kingdom_data_nl.csv", ";")
+write_delim(plot_data2, "./data/processed/Invasives_pathways_kingdom_data_en.csv", ";")
+
+print(plot2)
+
+```
+
+```{r soorten op signaallijst}
+signal_list <- read_delim("https://raw.githubusercontent.com/trias-project/indicators/master/data/input/eu_concern_species.tsv", 
+    "\t", escape_double = FALSE, col_types = cols(entry_into_force = col_date(format = "%Y-%m-%d")), 
+    trim_ws = TRUE)
+
+signal_list <- 
+  signal_list %>% 
+  mutate(backbone_taxonKey = case_when(backbone_taxonKey == 6247411 ~ 1311477,
+                         TRUE ~ backbone_taxonKey))
+
+keys_flanders <- 
+  merged_info %>% 
+  filter(locality == "Flemish Region") %>% 
+  mutate(key = as.numeric(key)) %>% 
+  mutate(key = case_when(key %in% c(6157026, 6157035, 7062200) ~ 2443002,
+                         TRUE ~ key)) %>% 
+  distinct(key, kingdom, phylum, class)
+
+
+  
+data_flanders_listed <- 
+  keys_flanders %>% 
+  inner_join(y = signal_list, by = c("key" = "backbone_taxonKey")) %>% 
+  mutate(class_nl = case_when(class == "Mammalia" ~ "zoogdieren",
+                              class == "Actinopterygii" ~ "vissen",
+                              class == "Amphibia" ~ "amfibieën en reptielen",
+                              class == "Insecta" ~ "insecten",
+                              class == "Liliopsida" ~ "vaatplanten",
+                              class == "Magnoliopsida" ~ "vaatplanten",
+                              class == "Malacostraca" ~ "kreeftachtigen",
+                              class == "Reptilia" ~ "amfibieën en reptielen")) %>% 
+  mutate(class_en = case_when(class == "Mammalia" ~ "mammals",
+                              class == "Actinopterygii" ~ "fish",
+                              class == "Amphibia" ~ "amphibians and reptiles",
+                              class == "Insecta" ~ "insects",
+                              class == "Liliopsida" ~ "vascular plants",
+                              class == "Magnoliopsida" ~ "vascular plants",
+                              class == "Malacostraca" ~ "crustaceans",
+                              class == "Reptilia" ~ "amphibians and reptiles"))  %>% 
+  add_row(key = 1111111, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Oxyura jamaicensis", english_name = "Ruddy duck", class_nl = "vogels", class_en = "birds") %>% 
+  add_row(key = 1111112, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Alopochen aegyptica", english_name = "Egyptian goose", class_nl = "vogels", class_en = "birds") %>% 
+   add_row(key = 1111113, kingdom = "Animalia", phylum = "Chordata" , class = "Aves", checklist_scientificName = "Threskiornis aethiopicus", english_name = "Sacred ibis", class_nl = "vogels", class_en = "birds")
+
+table(data_flanders_listed$class_nl, useNA = "ifany")
+
+data_flanders_listed_class <- 
+  data_flanders_listed %>% 
+  group_by(class_nl,class_en) %>% 
+  summarise(n = n_distinct(key))
+
+talen <- c("NL","EN","DE")
+
+for(taal in talen){
+  if(taal == "NL"){
+    p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_nl, n), y = n))
+  }else{
+    if(taal == "EN"){
+      p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_en, n), y = n))
+    }else{
+      print("WARNING: Translate classes!! defaults to english")
+      p <- ggplot(data = data_flanders_listed_class, aes(x = reorder(class_en, n), y = n))
+    }
+  }
+  p <- p + geom_bar(stat = "identity")
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  p <- p + coord_flip()
+  p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), limits = c(0, 14), expand = c(0,0))
+  p <- p + scale_x_discrete("",expand = c(0,0))
+  print(p) 
+  
+  for(extensie in extensies){
+    fn <- paste0("reports/figures/NumberOfSpeciesOnList_", taal, extensie)
+    ggsave(fn , p)
+  }
+}
+```
+
