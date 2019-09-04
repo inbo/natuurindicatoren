@@ -1,9 +1,9 @@
 pathway_level1;n;examples
-contaminant;192;Echinochloa inundata ,Cardiospermum halicacabum ,Trifolium pallidum ,Gyrodactylus proterorhini ,Cardamine corymbosa 
-corridor;33;Ponticola kessleri ,Gammarus tigrinus ,Nyctereutes procyonoides ,Akebia quinata ,Neogobius melanostomus 
-escape;426;Acer rubrum ,Armeria arenaria ,Phyllostachys viridiglaucescens ,Eutrochium maculatum L EELamont,Ligularia dentata AGray Hara
-natural;17;Procyon lotor ,Eichhornia crassipes ,Nyctereutes procyonoides ,Magallana gigas ,Ondatra zibethicus 
-release;34;Trachemys scripta scripta,Myocastor coypus ,Cortaderia selloana ,Pachytriton labiatus ,Egeria densa 
-stowaway;96;Corbicula fluminalis ,Trifolium suffocatum ,Ficopomatus enigmaticus ,Callinectes sapidus ,Anacridium aegyptium 
-unaided;4;Neovison vison ,Boettgerilla pallens ,Hygromia cinctella ,Vespa velutina 
-unknown;176;Carex vulpinoidea ,Juncus xiphioides ,Rumex hybridus ,Holocnemus pluchei ,Ziziphus lotus 
+contaminant;192;Plantago sempervirens ,Sinanodonta woodiana ,Trigonella arabica ,Chloris pycnothrix ,Torilis africana 
+corridor;33;Cortaderia selloana ,Gammarus tigrinus ,Corbicula fluminea ,Dreissena bugensis ,Echinogammarus trichiatus 
+escape;426;Tamarix parviflora ,Verbesina alternifolia L Britton ex Kearney,Ilex meserveae ,Pacifastacus leniusculus ,Elaeagnus multiflora 
+natural;17;Campylopus introflexus ,Magallana gigas ,Nyctereutes procyonoides ,Hypophthalmichthys molitrix ,Akebia quinata 
+release;34;Pimephales promelas ,Nyctereutes procyonoides ,Pleurodeles waltl ,Eichhornia crassipes ,Harmonia axyridis 
+stowaway;96;Xerocincta neglecta ,Phidippus ,Campylopus introflexus ,Xerocincta neglecta ,Solanum elaeagnifolium 
+unaided;4;Vespa velutina ,Boettgerilla pallens ,Hygromia cinctella ,Neovison vison 
+unknown;176;Amphibalanus reticulatus ,Pellenes geniculatus ,Campylopus introflexus ,Rhithropanopeus harrisii ,Balanus tintinnabulum 
