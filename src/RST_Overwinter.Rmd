@@ -20,22 +20,14 @@ library(tidyverse)
 check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0)}
 ```
 
-```{r Connect with databank}
-con <- dbConnect(odbc::odbc(),
-                 Driver = "SQL Server Native Client 11.0",
-                 Server = "inbo-sql08-prd.inbo.be",
-                 Database = "W0004_00_Waterbirds",
-                 Trusted_Connection="yes") 
+```{r Update data van WatervogelDatabank}
+source(file = "./src/get_data/GetData_WatervogelDatabank.R")
 ```
 
+```{r Read data van WatervogelDatabank}
 
-```{r Data}
-Nieuwe_Data <- dbGetQuery(con,
-                          "SELECT  FROM [dbo].[FactTaxonOccurrence]")
-
- Oude_Data <- read_delim("data/processed/RST_Aantal_Overwinterend.csv", 
-    ";", escape_double = FALSE, trim_ws = TRUE)
 ```
+
 
 ```{r Nieuwe data klaarzetten}
 #dit stuk script filtert de winters die reeds in de oude data aanwezig zijn zodat deze niet worden verdubbeld
