@@ -1,9 +1,9 @@
 pathway_level1;n;examples
-contaminant;192;Echinochloa inundata ,Cardiospermum halicacabum ,Trifolium pallidum ,Gyrodactylus proterorhini ,Cardamine corymbosa 
-corridor;33;Ponticola kessleri ,Gammarus tigrinus ,Nyctereutes procyonoides ,Akebia quinata ,Neogobius melanostomus 
-escape;426;Acer rubrum ,Armeria arenaria ,Phyllostachys viridiglaucescens ,Eutrochium maculatum L EELamont,Ligularia dentata AGray Hara
-natural;17;Procyon lotor ,Eichhornia crassipes ,Nyctereutes procyonoides ,Magallana gigas ,Ondatra zibethicus 
-release;34;Trachemys scripta scripta,Myocastor coypus ,Cortaderia selloana ,Pachytriton labiatus ,Egeria densa 
-stowaway;96;Corbicula fluminalis ,Trifolium suffocatum ,Ficopomatus enigmaticus ,Callinectes sapidus ,Anacridium aegyptium 
-unaided;4;Neovison vison ,Boettgerilla pallens ,Hygromia cinctella ,Vespa velutina 
-unknown;176;Carex vulpinoidea ,Juncus xiphioides ,Rumex hybridus ,Holocnemus pluchei ,Ziziphus lotus 
+contaminant;192;Hygromia cinctella ,Rhaponticum repens L Hidalgo,Commelina obliqua ,Malope malacoides ,Enderleinellus kumadai 
+corridor;33;Corbicula fluminalis ,Ponticola kessleri ,Nyctereutes procyonoides ,Limnomysis benedeni ,Dikerogammarus villosus 
+escape;426;Fraxinus pennsylvanica ,Tsuga heterophylla ,Persea americana ,Acipenser baerii ,Fargesia spathacea 
+natural;17;Paspalum distichum ,Hypophthalmichthys molitrix ,Neogobius melanostomus ,Magallana gigas ,Ondatra zibethicus 
+release;34;Rhyzobius lophanthae ,Trachemys scripta scripta,Trachemys scripta elegans ,Pachytriton labiatus ,Hypophthalmichthys nobilis 
+stowaway;96;Dreissena bugensis ,Poa infirma ,Micropholcus fauroti ,Crangonyx pseudogracilis ,Girardia tigrina 
+unaided;4;Boettgerilla pallens ,Vespa velutina ,Hygromia cinctella ,Neovison vison 
+unknown;176;Hemimysis anomala ,Tandonia sowerbyi ,Oreochromis niloticus ,Veronica cymbalaria ,Cryptachaea veruculata 
