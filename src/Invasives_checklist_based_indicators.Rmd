@@ -122,7 +122,7 @@ merged_info <-
 ```{r indicator_total_year}
 table(merged_info$locality, useNA = "ifany")
 
-kingdoms <- c("Animalia", "Plantae")
+kingdoms <- c("Animalia")
 habitats <- c("freshwater", "freshwater|terrestrial", "marine", "marine|freshwater", "terrestrial")
 
 data_flanders_en <- 
