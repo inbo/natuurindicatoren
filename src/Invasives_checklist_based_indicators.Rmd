@@ -201,7 +201,12 @@ data_flanders_nl_cum2 <-
                              grepl("terrestrisch", habitat) ~ "terrestrisch",
                              grepl("zoetwater", habitat) ~ "zoetwater"))
 
-data_flanders_en_cum 
+data_flanders_en_cum <- 
+  data_flanders_nl_cum2 %>% 
+  mutate(habitat = case_when(grepl("estuarien", habitat) ~ "estuarine",
+                             grepl("marien", habitat) ~ "marine",
+                             grepl("terrestrisch", habitat) ~ "terrestrial",
+                             grepl("zoetwater", habitat) ~ "freshwater"))
 
 table(data_flanders_nl_cum2$habitat)
 
@@ -213,6 +218,13 @@ p_nl_cum <- ggplot(data_flanders_nl_cum2, aes(x = first_observed, y = n)) +
   ylab("Gecumuleerd aantal uitheemse soorten")
 
 p_nl_cum
+
+p_en_cum <- ggplot(data_flanders_en_cum, aes(x = first_observed, y = n)) +
+  geom_line(size = 1) +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(limits = c(1950, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  xlab("Year") +
+  ylab("Cumulative number of non-native species")
 
 width <- 10
 heigth <- 10
