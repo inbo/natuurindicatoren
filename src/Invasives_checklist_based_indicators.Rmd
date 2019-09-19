@@ -24,7 +24,7 @@ library(tidyverse)
 library(INBOtheme)
 library(knitr)
 
-theme_set(theme_inbo(10))
+theme_set(theme_inbo(16))
 theme_inbo <- theme_update(axis.title = element_text(colour = "black"), 
                            axis.text = element_text(colour = "black"),
                            legend.text = element_text(colour = "black", 
@@ -174,7 +174,27 @@ data_flanders_nl_cum <- data_flanders_nl %>%
   mutate(estuarien_cum = 0,
          marien_cum = 0,
          terrestrisch_cum = 0,
-         zoetwater_cum = 0)
+         zoetwater_cum = 0) %>% 
+  ungroup()
+
+minjaar <- min(data_flanders_nl_cum$first_observed)
+maxjaar <- max(data_flanders_nl_cum$first_observed)
+
+for(i in minjaar:maxjaar){
+  if(!i %in% data_flanders_nl_cum$first_observed){
+    data_flanders_nl_cum <- data_flanders_nl_cum %>% 
+      add_row(first_observed = i, 
+              estuarien = 0, 
+              marien = 0,
+              terrestrisch = 0,
+              zoetwater = 0,
+              estuarien_cum = 0,
+              marien_cum = 0,
+              terrestrisch_cum = 0,
+              zoetwater_cum =0) %>% 
+      arrange(first_observed)
+  } 
+}
   
 for(i in 1:nrow(data_flanders_nl_cum)){
   if(!is.na(data_flanders_nl_cum$estuarien[i])){
@@ -199,15 +219,28 @@ data_flanders_nl_cum2 <-
   mutate(habitat = factor(case_when(grepl("estuarien", habitat) ~ "estuarien",
                              grepl("marien", habitat) ~ "marien",
                              grepl("terrestrisch", habitat) ~ "terrestrisch",
-                             grepl("zoetwater", habitat) ~ "zoetwater"), levels = c("terrestrisch", "zoetwater", "estuarien", "marien")))
+                             grepl("zoetwater", habitat) ~ "zoetwater"), levels = c("terrestrisch", "zoetwater", "estuarien", "marien"))) %>% 
+  mutate(lustrum = round(first_observed/5)*5, decennium = signif(first_observed, 3))
 
 data_flanders_en_cum <- 
   data_flanders_nl_cum2 %>% 
-  mutate(habitat = case_when(grepl("estuarien", habitat) ~ "estuarine",
+  mutate(habitat = factor(case_when(grepl("estuarien", habitat) ~ "estuarine",
                              grepl("marien", habitat) ~ "marine",
                              grepl("terrestrisch", habitat) ~ "terrestrial",
-                             grepl("zoetwater", habitat) ~ "freshwater"), levels = c("terrestrial", "freshwater", "estuarine", "marine")))
+                             grepl("zoetwater", habitat) ~ "freshwater"), levels = c("terrestrial", "freshwater", "estuarine", "marine"))) %>% 
+  mutate(lustrum = round(first_observed/5)*5, decennium = signif(first_observed, 3))
 
+data_flanders_en_lustrum <- 
+  data_flanders_en_cum %>% 
+  group_by(lustrum, habitat) %>% 
+  summarise(n = max(n))
+
+data_flanders_nl_lustrum <- 
+  data_flanders_nl_cum2 %>% 
+  group_by(lustrum, habitat) %>% 
+  summarise(n = max(n))
+
+table(data_flanders_en_lustrum$lustrum)
 table(data_flanders_nl_cum2$habitat)
 
 p_nl_cum <- ggplot(data_flanders_nl_cum2, aes(x = first_observed, y = n)) +
@@ -222,9 +255,26 @@ print(p_nl_cum)
 p_en_cum <- ggplot(data_flanders_en_cum, aes(x = first_observed, y = n)) +
   geom_line(size = 1) +
   facet_wrap("habitat", nrow = 4, strip.position = "right") +
-  scale_x_continuous(limits = c(1950, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
   xlab("Year") +
   ylab("Cumulative number of non-native species")
+
+p_en_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y=n)) +
+  geom_col() +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  xlab("Year") +
+  ylab("Cumulative number of non-native species")
+
+p_nl_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y=n)) +
+  geom_col() +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  xlab("Jaar") +
+  ylab("Gecumuleerd aantal uitheemse soorten")
+
+p_en_cum2
+p_nl_cum2
 
 width <- 10
 heigth <- 10
@@ -237,6 +287,10 @@ ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plo
 ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum , width = width, height = heigth)
 ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum , width = width, height = heigth)
 ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum , width = width, height = heigth)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.jpg", plot = p_en_cum2)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.png", plot = p_en_cum2)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.jpg", plot = p_nl_cum2)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.png", plot = p_nl_cum2)
 
 data_flanders_stats <- 
   merged_info %>% 
