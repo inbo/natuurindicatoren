@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   echo = FALSE,
   fig.width = 147 / 25.4,
-  fig.height = 103 / 25.4,
+  fig.height = 90 / 25.4,
   dpi = 300
 )
 extensies <- c(".eps", ".jpeg", ".png")
@@ -24,7 +24,7 @@ library(tidyverse)
 library(INBOtheme)
 library(knitr)
 
-theme_set(theme_inbo(14))
+theme_set(theme_inbo(10))
 theme_inbo <- theme_update(axis.title = element_text(colour = "black"), 
                            axis.text = element_text(colour = "black"),
                            legend.text = element_text(colour = "black", 
@@ -276,21 +276,20 @@ p_nl_cum2 <- ggplot(data_flanders_nl_lustrum, aes(x = lustrum, y=n)) +
 p_en_cum2
 p_nl_cum2
 
-width <- 10
-heigth <- 10
-
-ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.jpg", plot = p_en_cum2)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.png", plot = p_en_cum2)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.jpg", plot = p_nl_cum2)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.png", plot = p_nl_cum2)
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en, heigth = 140/25.4)
+ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.jpg", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.png", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.eps", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.jpg", plot = p_nl_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.png", plot = p_nl_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.eps", plot = p_nl_cum2, height = 140/25.4)
 
 data_flanders_stats <- 
   merged_info %>% 
@@ -457,7 +456,7 @@ plot_data <-
 plot <- 
   plot_data %>% 
   ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
-  geom_col(width = 0.7) +
+  geom_col(width = 0.5) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Aantal soorten") +
@@ -477,7 +476,7 @@ plot_data2 <-
 plot2 <- 
   plot_data2%>% 
   ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
-  geom_col(width = 0.7) +
+  geom_col(width = 0.5) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Number of species") +
@@ -485,9 +484,9 @@ plot2 <-
 
 for(e in extensies){
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
-  ggsave(fn, plot)
+  ggsave(fn, plot, height = 90/25.4)
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
-  ggsave(fn, plot2)
+  ggsave(fn, plot2, height = 90/25.4)
 }
 
 write_delim(plot_data, "./data/processed/Invasives_pathways_kingdom_data_nl.csv", ";")
