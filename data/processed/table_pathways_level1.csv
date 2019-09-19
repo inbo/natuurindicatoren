@@ -1,9 +1,9 @@
 pathway_level1;n;examples
-contaminant;192;Hygromia cinctella ,Rhaponticum repens L Hidalgo,Commelina obliqua ,Malope malacoides ,Enderleinellus kumadai 
-corridor;33;Corbicula fluminalis ,Ponticola kessleri ,Nyctereutes procyonoides ,Limnomysis benedeni ,Dikerogammarus villosus 
-escape;426;Fraxinus pennsylvanica ,Tsuga heterophylla ,Persea americana ,Acipenser baerii ,Fargesia spathacea 
-natural;17;Paspalum distichum ,Hypophthalmichthys molitrix ,Neogobius melanostomus ,Magallana gigas ,Ondatra zibethicus 
-release;34;Rhyzobius lophanthae ,Trachemys scripta scripta,Trachemys scripta elegans ,Pachytriton labiatus ,Hypophthalmichthys nobilis 
-stowaway;96;Dreissena bugensis ,Poa infirma ,Micropholcus fauroti ,Crangonyx pseudogracilis ,Girardia tigrina 
-unaided;4;Boettgerilla pallens ,Vespa velutina ,Hygromia cinctella ,Neovison vison 
-unknown;176;Hemimysis anomala ,Tandonia sowerbyi ,Oreochromis niloticus ,Veronica cymbalaria ,Cryptachaea veruculata 
+contaminant;192;Trifolium strictum ,Monocorophium sextonae ,Ipomoea hederacea var hederacea,Solanum ptychanthum ,Euphorbia dentata 
+corridor;33;Cortaderia selloana ,Corbicula fluminalis ,Paspalum distichum ,Jaera istri ,Nyctereutes procyonoides 
+escape;426;Euonymus japonicus ,Orthriophis taeniurus ,Sarcophilus harrisii ,Erodium manescavii ,Syringa josikaea 
+natural;17;Paspalum distichum ,Procyon lotor ,Hypophthalmichthys molitrix ,Campylopus introflexus ,Rhaponticum repens L Hidalgo
+release;34;Trachemys scripta elegans ,Hypophthalmichthys molitrix ,Ondatra zibethicus ,Trachemys scripta scripta,Cabomba caroliniana 
+stowaway;96;Nysius huttoni ,Chondrilla juncea ,Rangia cuneata ,Monocorophium sextonae ,Pimephales promelas 
+unaided;4;Vespa velutina ,Hygromia cinctella ,Neovison vison ,Boettgerilla pallens 
+unknown;176;Hemigrapsus sanguineus ,Procyon lotor ,Arachis hypogaea ,Incisocalliope aestuarius ,Macaroeris nidicolens 

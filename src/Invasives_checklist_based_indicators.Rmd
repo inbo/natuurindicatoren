@@ -24,7 +24,7 @@ library(tidyverse)
 library(INBOtheme)
 library(knitr)
 
-theme_set(theme_inbo(16))
+theme_set(theme_inbo(14))
 theme_inbo <- theme_update(axis.title = element_text(colour = "black"), 
                            axis.text = element_text(colour = "black"),
                            legend.text = element_text(colour = "black", 
@@ -266,7 +266,7 @@ p_en_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y=n)) +
   xlab("Year") +
   ylab("Cumulative number of non-native species")
 
-p_nl_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y=n)) +
+p_nl_cum2 <- ggplot(data_flanders_nl_lustrum, aes(x = lustrum, y=n)) +
   geom_col() +
   facet_wrap("habitat", nrow = 4, strip.position = "right") +
   scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
@@ -307,6 +307,7 @@ table(data_flanders_stats$habitat, data_flanders_stats$kingdom, data_flanders_st
 ```{r pathways}
 from <- 1950
 n_species <- 5
+kingdoms <- c("Animalia", "Plantae")
 
 data_flanders <- 
   merged_info %>% 
@@ -456,7 +457,7 @@ plot_data <-
 plot <- 
   plot_data %>% 
   ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
-  geom_col() +
+  geom_col(width = 0.7) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Aantal soorten") +
@@ -476,7 +477,7 @@ plot_data2 <-
 plot2 <- 
   plot_data2%>% 
   ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
-  geom_col() +
+  geom_col(width = 0.7) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
   scale_y_continuous("Number of species") +
@@ -484,9 +485,9 @@ plot2 <-
 
 for(e in extensies){
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
-  ggsave( fn, plot, width = width, height = heigth)
+  ggsave(fn, plot)
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
-  ggsave( fn, plot2, width = width, height = heigth)
+  ggsave(fn, plot2)
 }
 
 write_delim(plot_data, "./data/processed/Invasives_pathways_kingdom_data_nl.csv", ";")
