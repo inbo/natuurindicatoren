@@ -233,12 +233,14 @@ data_flanders_en_cum <-
 data_flanders_en_lustrum <- 
   data_flanders_en_cum %>% 
   group_by(lustrum, habitat) %>% 
-  summarise(n = max(n))
+  summarise(n = max(n)) %>% 
+  filter(lustrum >= 1950)
 
 data_flanders_nl_lustrum <- 
   data_flanders_nl_cum2 %>% 
   group_by(lustrum, habitat) %>% 
-  summarise(n = max(n))
+  summarise(n = max(n)) %>% 
+  filter(lustrum >= 1950)
 
 table(data_flanders_en_lustrum$lustrum)
 table(data_flanders_nl_cum2$habitat)
@@ -255,28 +257,32 @@ print(p_nl_cum)
 p_en_cum <- ggplot(data_flanders_en_cum, aes(x = first_observed, y = n)) +
   geom_line(size = 1) +
   facet_wrap("habitat", nrow = 4, strip.position = "right") +
-  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950, max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
   xlab("Year") +
   ylab("Cumulative number of non-native species")
 
-p_en_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y=n)) +
+p_en_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y = n)) +
   geom_col() +
   facet_wrap("habitat", nrow = 4, strip.position = "right") +
-  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  scale_x_continuous(breaks = seq(1950, max(data_flanders_en_lustrum$lustrum), by = 10), labels= seq(1950,max(data_flanders_en_lustrum$lustrum), by = 10)) +
   xlab("Year") +
   ylab("Cumulative number of non-native species")
+
 
 p_nl_cum2 <- ggplot(data_flanders_nl_lustrum, aes(x = lustrum, y=n)) +
   geom_col() +
   facet_wrap("habitat", nrow = 4, strip.position = "right") +
-  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  scale_x_continuous(breaks = seq(1950, max(data_flanders_nl_lustrum$lustrum), by = 10), labels= seq(1950,max(data_flanders_nl_lustrum$lustrum), by = 10)) +
   xlab("Jaar") +
   ylab("Gecumuleerd aantal uitheemse soorten")
 
 p_en_cum2
 p_nl_cum2
 
-ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en, heigth = 140/25.4)
+width  <-  147 / 25.4
+height <- 140/25.4
+
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en, height  = height, width = width, units = "in")
 ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en)
 ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl)
 ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl)
