@@ -25,7 +25,7 @@ crs_bel <- CRS("+init=epsg:31370")
 ```
 
 ```{r}
-Datum <- 220719
+Datum <- 120220
 fn <- paste0("data/Raw/Taxon_Rosse_Stekelstaart_", Datum, ".xlsx")
 
 Taxon_Rosse_Stekelstaart <- read_excel(fn, 
