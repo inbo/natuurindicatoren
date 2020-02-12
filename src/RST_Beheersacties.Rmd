@@ -16,6 +16,7 @@ library(sp)
 library(leaflet)
 library(leaflet.minicharts)
 library(lubridate)
+library(htmlwidgets)
 library(tidyverse)
 ```
 
@@ -112,6 +113,11 @@ map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
 
 
 print(map)
+
+#Export en move output
+saveWidget(map, file="kaartje_beheersacties.html", selfcontained = TRUE)
+file.copy("./kaartje_beheersacties.html", "./data/processed/kaartje_beheersacties.html")
+file.remove("./kaartje_beheersacties.html")
 
 ```
 
