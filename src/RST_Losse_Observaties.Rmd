@@ -140,19 +140,19 @@ for(taal in talen){
 talen <- c("NL","EN","DE")
 extensies <- c(".eps", ".jpeg")
 for(taal in talen){
-  p <- ggplot(data = RST_Losse_Observaties2, aes(x = Jaar, y = Maximum))
+  p <- ggplot(data = RST_Losse_Observaties2, aes(x = Jaar, y = Maximum_Bel))
   p <- p + geom_col() +
-    geom_line(aes(x = Jaar, y = Gebieden))
+    geom_line(aes(x = Jaar, y = Gebieden_Bel, colour = "black"), colour = "black", size = 1) 
   p <- p + scale_x_continuous(NULL, breaks = seq(2011, max(RST_Losse_Observaties2$Jaar), by = 1))
   p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
   if(taal == "NL"){
-    p <- p + scale_y_continuous("Maandmaximum in België o.b.v. losse waarnemingen",breaks = seq(0, 20, by = 2), limits = c(0,20), expand = c(0,0))
+    p <- p + scale_y_continuous("Maandmaximum in België o.b.v. losse waarnemingen",breaks = seq(0, 40, by = 2), limits = c(0,40), expand = c(0,0))
   }else{
     if(taal == "EN"){
-      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 20, by = 2), limits = c(0,20),expand = c(0,0))
+      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 40, by = 2), limits = c(0,40),expand = c(0,0))
     }else{
       print("WARNING: Translate y-axis!! defaults to english")
-      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 20, by = 2), limits = c(0,20),expand = c(0,0))
+      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 400, by = 2), limits = c(0,40),expand = c(0,0))
     }
   }
   p <- p + theme(axis.title.y = element_text(size = 8))
