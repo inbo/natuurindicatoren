@@ -14,8 +14,8 @@ library(ggplot2)
 library(dplyr)
 library(INBOtheme)
 
-df_pathway <- read.csv("data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv")
-df_count <- read.csv("data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv")
+df_pathway <- read.csv("./data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-1.csv")
+df_count <- read.csv("./data/processed/bedreiging-door-nieuwe-uitheemse-diersoorten-2.csv")
 
 # function to automatically create multiliners for x-axis,
 # splitting on the first space after the center

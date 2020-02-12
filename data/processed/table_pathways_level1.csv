@@ -1,9 +1,9 @@
 pathway_level1;n;examples
-contaminant;192;Echinochloa inundata ,Cardiospermum halicacabum ,Trifolium pallidum ,Gyrodactylus proterorhini ,Cardamine corymbosa 
-corridor;33;Ponticola kessleri ,Gammarus tigrinus ,Nyctereutes procyonoides ,Akebia quinata ,Neogobius melanostomus 
-escape;426;Acer rubrum ,Armeria arenaria ,Phyllostachys viridiglaucescens ,Eutrochium maculatum L EELamont,Ligularia dentata AGray Hara
-natural;17;Procyon lotor ,Eichhornia crassipes ,Nyctereutes procyonoides ,Magallana gigas ,Ondatra zibethicus 
-release;34;Trachemys scripta scripta,Myocastor coypus ,Cortaderia selloana ,Pachytriton labiatus ,Egeria densa 
-stowaway;96;Corbicula fluminalis ,Trifolium suffocatum ,Ficopomatus enigmaticus ,Callinectes sapidus ,Anacridium aegyptium 
-unaided;4;Neovison vison ,Boettgerilla pallens ,Hygromia cinctella ,Vespa velutina 
-unknown;176;Carex vulpinoidea ,Juncus xiphioides ,Rumex hybridus ,Holocnemus pluchei ,Ziziphus lotus 
+contaminant;192;Anguillicoloides crassus Kuwahara Niimi  Itagaki 1974 Moravec  Taraschewski 1988,Agrostis exarata ,Lasius neglectus ,Torilis africana ,Corbicula fluminalis 
+corridor;33;Jaera istri ,Dendrocoelum romanodanubiale ,Neogobius melanostomus ,Eichhornia crassipes ,Ensis directus 
+escape;426;Zantedeschia aethiopica ,vandula stoechas ,Anisocampium niponicum Mett Yea CLiu WLChiou  MKato,Crocosmia crocosmiiflora Nicholson NEBr,Abies nordmanniana 
+natural;17;Neogobius melanostomus ,Magallana gigas ,Ctenopharyngodon idella ,Akebia quinata ,Rhaponticum repens L Hidalgo
+release;34;Ondatra zibethicus ,Ctenopharyngodon idella ,Pseudorasbora parva ,Triturus marmoratus ,Clarias gariepinus 
+stowaway;96;Megabalanus coccopoma ,Meconema meridionale ,Massylaea vermiculata ,Melita nitida ,Corbicula fluminea 
+unaided;4;Neovison vison ,Vespa velutina ,Hygromia cinctella ,Boettgerilla pallens 
+unknown;176;Milax gagates ,Euborellia annulipes ,Cryptachaea veruculata ,Agropogon lutosus Poir PFourn,Amphibalanus reticulatus 

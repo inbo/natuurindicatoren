@@ -6,7 +6,14 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  echo = FALSE,
+  fig.width = 147 / 25.4,
+  fig.height = 90 / 25.4,
+  dpi = 300
+)
 extensies <- c(".eps", ".jpeg", ".png")
 ```
 
@@ -16,6 +23,16 @@ library(rgbif)
 library(tidyverse)
 library(INBOtheme)
 library(knitr)
+
+theme_set(theme_inbo(10))
+theme_inbo <- theme_update(axis.title = element_text(colour = "black"), 
+                           axis.text = element_text(colour = "black"),
+                           legend.text = element_text(colour = "black", 
+                                                      size = rel(0.8)),
+                           plot.title = element_text(colour = "#843860"),
+                           legend.key = element_rect(fill = "white"))
+update_geom_defaults("point", aes(size = 2))
+update_geom_defaults("line", aes(size = 0.25))
 ```
 
 ```{r Get Data}
@@ -105,7 +122,7 @@ merged_info <-
 ```{r indicator_total_year}
 table(merged_info$locality, useNA = "ifany")
 
-kingdoms <- c("Animalia", "Plantae")
+kingdoms <- c("Animalia")
 habitats <- c("freshwater", "freshwater|terrestrial", "marine", "marine|freshwater", "terrestrial")
 
 data_flanders_en <- 
@@ -113,6 +130,7 @@ data_flanders_en <-
   filter(locality == "Flemish Region") %>% 
   filter(kingdom %in% kingdoms) %>% 
   filter(habitat %in% habitats) %>%
+  filter(first_observed >= 1800) %>% 
   distinct(key, habitat, first_observed, kingdom) %>% 
   mutate(habitat = case_when(habitat == "freshwater|terrestrial" ~ "estuarine",
                              habitat == "marine|freshwater" ~ "estuarine",
@@ -120,7 +138,7 @@ data_flanders_en <-
 
 sum(!is.na(data_flanders_en$first_observed))
 sum(!is.na(data_flanders_en$habitat))
-temp <- data_flanders_en %>% filter(!is.na(first_observed))
+temp <- data_flanders_en %>% filter(!is.na(habitat))
 table(temp$kingdom, temp$habitat)
 
 data_flanders_nl <- 
@@ -140,25 +158,144 @@ p_nl <- indicator_introduction_year(data_flanders_nl, start_year_plot = 1950,
                                  facet_column = "habitat", first_observed = "first_observed",
                                  x_lab = "Jaar", y_lab = "Aantal geïntroduceerde invasieve soorten") 
 
-p_nl_cum <- indicator_total_year(data_flanders_nl, start_year_plot = 1950,
-                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
-                                 facet_column = "habitat", first_observed = "first_observed",
-                                 x_lab = "Jaar", y_lab = "Gecumuleerd aantal invasieve soorten") 
+#p_nl_cum <- indicator_total_year(data_flanders_nl, start_year_plot = 1950,
+#                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+ #                                facet_column = "habitat", first_observed = "first_observed",
+  #                               x_lab = "Jaar", y_lab = "Gecumuleerd aantal invasieve soorten") 
 
-p_en_cum <- indicator_total_year(data_flanders_en, start_year_plot = 1950,
-                                 x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
-                                 facet_column = "habitat", first_observed = "first_observed") 
-width <- 10
-heigth <- 10
+#p_en_cum <- indicator_total_year(data_flanders_en, start_year_plot = 1950,
+   #                              x_major_scale_stepsize = 10, x_minor_scale_stepsize = 5,
+    #                             facet_column = "habitat", first_observed = "first_observed") 
 
-ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl , width = width, height = heigth)
-ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum , width = width, height = heigth)
-ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum , width = width, height = heigth)
+data_flanders_nl_cum <- data_flanders_nl %>% 
+  group_by(first_observed, habitat) %>% 
+  summarise(n = n_distinct(key)) %>% 
+  spread(habitat, n, fill = 0) %>% 
+  mutate(estuarien_cum = 0,
+         marien_cum = 0,
+         terrestrisch_cum = 0,
+         zoetwater_cum = 0) %>% 
+  ungroup()
+
+minjaar <- min(data_flanders_nl_cum$first_observed)
+maxjaar <- max(data_flanders_nl_cum$first_observed)
+
+for(i in minjaar:maxjaar){
+  if(!i %in% data_flanders_nl_cum$first_observed){
+    data_flanders_nl_cum <- data_flanders_nl_cum %>% 
+      add_row(first_observed = i, 
+              estuarien = 0, 
+              marien = 0,
+              terrestrisch = 0,
+              zoetwater = 0,
+              estuarien_cum = 0,
+              marien_cum = 0,
+              terrestrisch_cum = 0,
+              zoetwater_cum =0) %>% 
+      arrange(first_observed)
+  } 
+}
+  
+for(i in 1:nrow(data_flanders_nl_cum)){
+  if(!is.na(data_flanders_nl_cum$estuarien[i])){
+    data_flanders_nl_cum$estuarien_cum[i] <- sum(data_flanders_nl_cum$estuarien_cum[i-1], data_flanders_nl_cum$estuarien[i], na.rm = TRUE)
+  }
+  if(!is.na(data_flanders_nl_cum$marien[i])){
+    data_flanders_nl_cum$marien_cum[i] <- sum(data_flanders_nl_cum$marien_cum[i-1], data_flanders_nl_cum$marien[i], na.rm = TRUE)
+  }
+  if(!is.na(data_flanders_nl_cum$terrestrisch[i])){
+    data_flanders_nl_cum$terrestrisch_cum[i] <- sum(data_flanders_nl_cum$terrestrisch_cum[i-1], data_flanders_nl_cum$terrestrisch[i], na.rm = TRUE)
+  }
+  if(!is.na(data_flanders_nl_cum$zoetwater[i])){
+    data_flanders_nl_cum$zoetwater_cum[i] <- sum(data_flanders_nl_cum$zoetwater_cum[i-1], data_flanders_nl_cum$zoetwater[i], na.rm = TRUE)
+  }
+}
+
+data_flanders_nl_cum2 <- 
+  data_flanders_nl_cum %>% 
+  dplyr::select(-estuarien, - marien, -terrestrisch, -zoetwater) %>% 
+  group_by(first_observed) %>% 
+  gather(key = habitat, value = n, -first_observed) %>% 
+  mutate(habitat = factor(case_when(grepl("estuarien", habitat) ~ "estuarien",
+                             grepl("marien", habitat) ~ "marien",
+                             grepl("terrestrisch", habitat) ~ "terrestrisch",
+                             grepl("zoetwater", habitat) ~ "zoetwater"), levels = c("terrestrisch", "zoetwater", "estuarien", "marien"))) %>% 
+  mutate(lustrum = round(first_observed/5)*5, decennium = signif(first_observed, 3))
+
+data_flanders_en_cum <- 
+  data_flanders_nl_cum2 %>% 
+  mutate(habitat = factor(case_when(grepl("estuarien", habitat) ~ "estuarine",
+                             grepl("marien", habitat) ~ "marine",
+                             grepl("terrestrisch", habitat) ~ "terrestrial",
+                             grepl("zoetwater", habitat) ~ "freshwater"), levels = c("terrestrial", "freshwater", "estuarine", "marine"))) %>% 
+  mutate(lustrum = round(first_observed/5)*5, decennium = signif(first_observed, 3))
+
+data_flanders_en_lustrum <- 
+  data_flanders_en_cum %>% 
+  group_by(lustrum, habitat) %>% 
+  summarise(n = max(n)) %>% 
+  filter(lustrum >= 1950)
+
+data_flanders_nl_lustrum <- 
+  data_flanders_nl_cum2 %>% 
+  group_by(lustrum, habitat) %>% 
+  summarise(n = max(n)) %>% 
+  filter(lustrum >= 1950)
+
+table(data_flanders_en_lustrum$lustrum)
+table(data_flanders_nl_cum2$habitat)
+
+p_nl_cum <- ggplot(data_flanders_nl_cum2, aes(x = first_observed, y = n)) +
+  geom_line(size = 1) +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(limits = c(1950, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  xlab("Jaar") +
+  ylab("Gecumuleerd aantal uitheemse soorten")
+
+print(p_nl_cum)
+
+p_en_cum <- ggplot(data_flanders_en_cum, aes(x = first_observed, y = n)) +
+  geom_line(size = 1) +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(limits = c(1940, max(data_flanders_nl_cum2$first_observed)), labels = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 10), breaks = seq(1950, max(data_flanders_nl_cum2$first_observed), by = 10), minor_breaks = seq(1950,max(data_flanders_nl_cum2$first_observed), by = 2)) +
+  xlab("Year") +
+  ylab("Cumulative number of non-native species")
+
+p_en_cum2 <- ggplot(data_flanders_en_lustrum, aes(x = lustrum, y = n)) +
+  geom_col() +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(breaks = seq(1950, max(data_flanders_en_lustrum$lustrum), by = 10), labels= seq(1950,max(data_flanders_en_lustrum$lustrum), by = 10)) +
+  xlab("Year") +
+  ylab("Cumulative number of non-native species")
+
+
+p_nl_cum2 <- ggplot(data_flanders_nl_lustrum, aes(x = lustrum, y=n)) +
+  geom_col() +
+  facet_wrap("habitat", nrow = 4, strip.position = "right") +
+  scale_x_continuous(breaks = seq(1950, max(data_flanders_nl_lustrum$lustrum), by = 10), labels= seq(1950,max(data_flanders_nl_lustrum$lustrum), by = 10)) +
+  xlab("Jaar") +
+  ylab("Gecumuleerd aantal uitheemse soorten")
+
+p_en_cum2
+p_nl_cum2
+
+width  <-  147 / 25.4
+height <- 140/25.4
+
+ggsave("reports/figures/Invasives_first_observed_habitat_en.jpg", plot = p_en, height  = height, width = width, units = "in")
+ggsave("reports/figures/Invasives_first_observed_habitat_en.png", plot = p_en)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.jpg", plot = p_nl)
+ggsave("reports/figures/Invasives_first_observed_habitat_nl.png", plot = p_nl)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.jpg", plot = p_nl_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl.png", plot = p_nl_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.jpg", plot = p_en_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en.png", plot = p_en_cum)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.jpg", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.png", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_en_bar.eps", plot = p_en_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.jpg", plot = p_nl_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.png", plot = p_nl_cum2, height = 140/25.4)
+ggsave("reports/figures/Invasives_Cumulative_first_observed_habitat_nl_bar.eps", plot = p_nl_cum2, height = 140/25.4)
 
 data_flanders_stats <- 
   merged_info %>% 
@@ -175,6 +312,7 @@ table(data_flanders_stats$habitat, data_flanders_stats$kingdom, data_flanders_st
 ```{r pathways}
 from <- 1950
 n_species <- 5
+kingdoms <- c("Animalia", "Plantae")
 
 data_flanders <- 
   merged_info %>% 
@@ -324,10 +462,11 @@ plot_data <-
 plot <- 
   plot_data %>% 
   ggplot(aes(x = reorder(introductieweg,n), y= n, fill = kingdom)) + 
-  geom_col() +
+  geom_col(width = 0.5) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
-  scale_y_continuous("Aantal soorten") 
+  scale_y_continuous("Aantal soorten") +
+  theme(legend.title = element_blank())
 
 plot_data2 <- 
   data_flanders %>% 
@@ -343,16 +482,17 @@ plot_data2 <-
 plot2 <- 
   plot_data2%>% 
   ggplot(aes(x = reorder(pathway_level1,n), y= n, fill = kingdom)) + 
-  geom_col() +
+  geom_col(width = 0.5) +
   coord_flip() + 
   scale_x_discrete(NULL, expand = c(0,0)) + 
-  scale_y_continuous("Number of species") 
+  scale_y_continuous("Number of species") +
+  theme(legend.title = element_blank())
 
 for(e in extensies){
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_nl", e)
-  ggsave( fn, plot, width = width, height = heigth)
+  ggsave(fn, plot, height = 90/25.4)
   fn <- paste0("./reports/figures/Invasives_pathways_kingdom_en", e)
-  ggsave( fn, plot2, width = width, height = heigth)
+  ggsave(fn, plot2, height = 90/25.4)
 }
 
 write_delim(plot_data, "./data/processed/Invasives_pathways_kingdom_data_nl.csv", ";")
@@ -426,10 +566,11 @@ for(taal in talen){
     }
   }
   p <- p + geom_bar(stat = "identity")
-  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5), legend.title = NULL)
   p <- p + coord_flip()
   p <- p + scale_y_continuous("", breaks = seq(0, 15, by = 2), minor_breaks = seq(0,15, by=1), limits = c(0, 14), expand = c(0,0))
   p <- p + scale_x_discrete("",expand = c(0,0))
+  
   print(p) 
   
   for(extensie in extensies){
