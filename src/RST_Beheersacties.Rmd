@@ -15,6 +15,8 @@ library(readxl)
 library(sp)
 library(leaflet)
 library(leaflet.minicharts)
+library(leaflet.extras)
+library(leafem)
 library(lubridate)
 library(tidyverse)
 ```
@@ -29,12 +31,12 @@ Datum <- 220719
 fn <- paste0("data/Raw/Taxon_Rosse_Stekelstaart_", Datum, ".xlsx")
 
 Taxon_Rosse_Stekelstaart <- read_excel(fn, 
-    col_types = c("text", "text", "text", 
-        "text", "numeric", "numeric", "text", 
-        "text", "numeric", "text", "text", 
-        "text", "text", "text", "numeric", 
-        "text", "text", "text", "text", "text", 
-        "text", "text"))
+                                       col_types = c("text", "text", "text", 
+                                                     "text", "numeric", "numeric", "text", 
+                                                     "text", "numeric", "text", "text", 
+                                                     "text", "text", "text", "numeric", 
+                                                     "text", "text", "text", "text", "text", 
+                                                     "text", "text"))
 ```
 
 ```{r}
@@ -68,7 +70,7 @@ Taxon_Rosse_Stekelstaart_int <- Taxon_Rosse_Stekelstaart %>%
   filter(Taxon_MeasurementUnit == "Count") %>% 
   mutate(EventDate2 = as.Date.character(EventDate, tryFormats = c("%d/%m/%Y"))) %>% 
   mutate(Year = year(EventDate2)) 
-  
+
 Taxon_Rosse_Stekelstaart2 <- Taxon_Rosse_Stekelstaart_int %>%  
   group_by(EventLocation, SampleType, Taxon_MeasurementQualifier) %>% 
   summarise(Aantal = sum(as.numeric(Taxon_Data))) %>% 
@@ -77,7 +79,17 @@ Taxon_Rosse_Stekelstaart2 <- Taxon_Rosse_Stekelstaart_int %>%
   left_join(y = Locaties) %>% 
   left_join(y = Taxon_Rosse_Stekelstaart_totalen) %>% 
   mutate(`Gevangen adult man` = `Gevangen AM`, 
-         `Gevangen adult vrouw` = `Gevangen AV`)
+         `Gevangen adult vrouw` = `Gevangen AV`) %>% 
+  group_by(EventLocation) %>% 
+  summarise(`Adult Man` = sum(`Adult Man`),
+            `Adult Vrouw` = sum(`Adult Vrouw`),
+            `Gevangen adult man` = sum(`Gevangen adult man`),
+            `Gevangen adult vrouw` = sum(`Gevangen adult vrouw`),
+            Juveniel = sum(Juveniel),
+            Pulli = sum(Pulli),
+            Totaal = sum(Totaal),
+            LambertX_Cent = first(LambertX_Cent),
+            LambertY_Cent = first(LambertY_Cent))
 ```
 
 ```{r Kaartjes}
@@ -85,8 +97,8 @@ coord <- Taxon_Rosse_Stekelstaart2 %>%
   select(X = LambertX_Cent, Y = LambertY_Cent)
 
 Taxon_Rosse_Stekelstaart_sp <- SpatialPointsDataFrame(coord,
-                                           data = Taxon_Rosse_Stekelstaart2,
-                                           proj4string = crs_bel)
+                                                      data = Taxon_Rosse_Stekelstaart2,
+                                                      proj4string = crs_bel)
 
 Taxon_Rosse_Stekelstaart_sp <- spTransform(Taxon_Rosse_Stekelstaart_sp, crs_wgs)
 Taxon_Rosse_Stekelstaart_sp$lng <- Taxon_Rosse_Stekelstaart_sp@coords[,1]
@@ -97,8 +109,21 @@ totaal_geschoten <- sum(Taxon_Rosse_Stekelstaart2$Totaal)
 colors <- c("#d7191c","#fdae61","#abd9e9","#2c7bb6", "#e66101","#4dac26")
 colors2 <- c("#e66101","#4dac26")
 
+vla_borders <- rgdal::readOGR("../backoffice-wild-analyse/Data/Spatial/flanders.geojson", "flanders", stringsAsFactors = FALSE)
+
+nat2000 <- rgdal::readOGR("https://github.com/inbo/IAS_Species_Dashboard/raw/3_version1.0/Data/Spatial/natura2000_201301.geojson", "natura2000_201301", stringsAsFactors = FALSE)
+
+proj4string(vla_borders) <- crs_bel
+proj4string(nat2000) <- crs_bel
+
+vla_borders <- spTransform(vla_borders, crs_wgs)
+nat2000 <- spTransform(nat2000, crs_wgs)
+
 map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>% 
-  addTiles() %>% 
+  addPolygons(data = nat2000,
+              color = "green",
+              opacity = 1,
+              weight = 1) %>% 
   addMinicharts(
     Taxon_Rosse_Stekelstaart_sp$lng, Taxon_Rosse_Stekelstaart_sp$lat,
     type = "pie",
@@ -108,11 +133,19 @@ map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
     width = 60 * sqrt(Taxon_Rosse_Stekelstaart2$Totaal) / sqrt(max(Taxon_Rosse_Stekelstaart2$Totaal)), transitionTime = 0,
     layerId = Taxon_Rosse_Stekelstaart2$EventLocation,
     legendPosition = "bottomright"
-  )
+  ) %>% 
+  addPolylines(data = spTransform(vla_borders, crs_wgs),
+               color = "black",
+               opacity = 1,
+               weight = 2) %>% 
+  addScaleBar(position = "bottomleft") %>% 
+  addLogo(img = "https://cdn2.iconfinder.com/data/icons/map-and-navigation-12/48/57-512.png", src = "remote", position = "topright") %>% 
+  setMapWidgetStyle(list(background= "white")) 
 
 
 print(map)
 
+mapview::mapshot(map, file = paste0(getwd(),"./reports/figures/easin_v_grid10k.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"))
 ```
 
 ```{r Tabel}
