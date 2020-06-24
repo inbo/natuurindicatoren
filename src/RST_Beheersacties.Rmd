@@ -95,8 +95,7 @@ Taxon_Rosse_Stekelstaart2b <- Taxon_Rosse_Stekelstaart2 %>%
   group_by(EventLocation) %>% 
   summarise(`Adult Man` = sum(`Adult Man`) + sum(`Gevangen adult man`),
             `Adult Vrouw` = sum(`Adult Vrouw`) + sum(`Gevangen adult vrouw`),
-            Juveniel = sum(Juveniel),
-            Pulli = sum(Pulli),
+            Juveniel = sum(Juveniel) + sum(Pulli),
             Totaal = sum(Totaal),
             LambertX_Cent = first(LambertX_Cent),
             LambertY_Cent = first(LambertY_Cent))
@@ -181,7 +180,7 @@ map_samen <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
   addMinicharts(
     Taxon_Rosse_Stekelstaart_sp$lng, Taxon_Rosse_Stekelstaart_sp$lat,
     type = "pie",
-    chartdata = Taxon_Rosse_Stekelstaart2b[,c("Adult Man", "Adult Vrouw", "Juveniel", "Pulli")], 
+    chartdata = Taxon_Rosse_Stekelstaart2b[,c("Adult Man", "Adult Vrouw", "Juveniel")], 
     colorPalette = colors, 
     opacity = 0.75,
     width = 60 * sqrt(Taxon_Rosse_Stekelstaart2b$Totaal) / sqrt(max(Taxon_Rosse_Stekelstaart2b$Totaal)), transitionTime = 0,
