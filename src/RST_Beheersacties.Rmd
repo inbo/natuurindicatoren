@@ -90,20 +90,19 @@ Taxon_Rosse_Stekelstaart2 <- Taxon_Rosse_Stekelstaart_int %>%
             Totaal = sum(Totaal),
             LambertX_Cent = first(LambertX_Cent),
             LambertY_Cent = first(LambertY_Cent))
+
+Taxon_Rosse_Stekelstaart2b <- Taxon_Rosse_Stekelstaart2 %>% 
+  group_by(EventLocation) %>% 
+  summarise(`Adult Man` = sum(`Adult Man`) + sum(`Gevangen adult man`),
+            `Adult Vrouw` = sum(`Adult Vrouw`) + sum(`Gevangen adult vrouw`),
+            Juveniel = sum(Juveniel),
+            Pulli = sum(Pulli),
+            Totaal = sum(Totaal),
+            LambertX_Cent = first(LambertX_Cent),
+            LambertY_Cent = first(LambertY_Cent))
 ```
 
-```{r Kaartjes}
-coord <- Taxon_Rosse_Stekelstaart2 %>% 
-  select(X = LambertX_Cent, Y = LambertY_Cent)
-
-Taxon_Rosse_Stekelstaart_sp <- SpatialPointsDataFrame(coord,
-                                                      data = Taxon_Rosse_Stekelstaart2,
-                                                      proj4string = crs_bel)
-
-Taxon_Rosse_Stekelstaart_sp <- spTransform(Taxon_Rosse_Stekelstaart_sp, crs_wgs)
-Taxon_Rosse_Stekelstaart_sp$lng <- Taxon_Rosse_Stekelstaart_sp@coords[,1]
-Taxon_Rosse_Stekelstaart_sp$lat <- Taxon_Rosse_Stekelstaart_sp@coords[,2]
-
+```{r Kaartjes: prep}
 totaal_geschoten <- sum(Taxon_Rosse_Stekelstaart2$Totaal)
 
 colors <- c("#d7191c","#fdae61","#abd9e9","#2c7bb6", "#e66101","#4dac26")
@@ -118,8 +117,22 @@ proj4string(nat2000) <- crs_bel
 
 vla_borders <- spTransform(vla_borders, crs_wgs)
 nat2000 <- spTransform(nat2000, crs_wgs)
+```
 
-map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>% 
+
+```{r Kaartjes: afschot & afvangst apart, eval = FALSE}
+coord <- Taxon_Rosse_Stekelstaart2 %>% 
+  select(X = LambertX_Cent, Y = LambertY_Cent)
+
+Taxon_Rosse_Stekelstaart_sp <- SpatialPointsDataFrame(coord,
+                                                      data = Taxon_Rosse_Stekelstaart2,
+                                                      proj4string = crs_bel)
+
+Taxon_Rosse_Stekelstaart_sp <- spTransform(Taxon_Rosse_Stekelstaart_sp, crs_wgs)
+Taxon_Rosse_Stekelstaart_sp$lng <- Taxon_Rosse_Stekelstaart_sp@coords[,1]
+Taxon_Rosse_Stekelstaart_sp$lat <- Taxon_Rosse_Stekelstaart_sp@coords[,2]
+
+map_split <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>% 
   addPolygons(data = nat2000,
               color = "green",
               opacity = 1,
@@ -143,9 +156,51 @@ map <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
   setMapWidgetStyle(list(background= "white")) 
 
 
-print(map)
+print(map_split)
 
-mapview::mapshot(map, file = paste0(getwd(),"./reports/figures/easin_v_grid10k.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"))
+mapview::mapshot(map_split, file = paste0(getwd(),"./reports/figures/easin_v_grid10k_split.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
+```
+
+```{r Kaartjes: alle acties samen, eval = FALSE}
+coord <- Taxon_Rosse_Stekelstaart2b %>% 
+  select(X = LambertX_Cent, Y = LambertY_Cent)
+
+Taxon_Rosse_Stekelstaart_sp <- SpatialPointsDataFrame(coord,
+                                                      data = Taxon_Rosse_Stekelstaart2b,
+                                                      proj4string = crs_bel)
+
+Taxon_Rosse_Stekelstaart_sp <- spTransform(Taxon_Rosse_Stekelstaart_sp, crs_wgs)
+Taxon_Rosse_Stekelstaart_sp$lng <- Taxon_Rosse_Stekelstaart_sp@coords[,1]
+Taxon_Rosse_Stekelstaart_sp$lat <- Taxon_Rosse_Stekelstaart_sp@coords[,2]
+
+map_samen <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>% 
+  addPolygons(data = nat2000,
+              color = "green",
+              opacity = 1,
+              weight = 1) %>% 
+  addMinicharts(
+    Taxon_Rosse_Stekelstaart_sp$lng, Taxon_Rosse_Stekelstaart_sp$lat,
+    type = "pie",
+    chartdata = Taxon_Rosse_Stekelstaart2b[,c("Adult Man", "Adult Vrouw", "Juveniel", "Pulli")], 
+    colorPalette = colors, 
+    opacity = 0.75,
+    width = 60 * sqrt(Taxon_Rosse_Stekelstaart2b$Totaal) / sqrt(max(Taxon_Rosse_Stekelstaart2b$Totaal)), transitionTime = 0,
+    layerId = Taxon_Rosse_Stekelstaart2b$EventLocation,
+    legendPosition = "bottomright"
+  ) %>% 
+  addPolylines(data = spTransform(vla_borders, crs_wgs),
+               color = "black",
+               opacity = 1,
+               weight = 2) %>% 
+  addScaleBar(position = "bottomleft") %>% 
+  addLogo(img = "https://cdn2.iconfinder.com/data/icons/map-and-navigation-12/48/57-512.png", src = "remote", position = "topright") %>% 
+  setMapWidgetStyle(list(background= "white")) 
+
+
+print(map_samen)
+
+mapview::mapshot(map_samen, file = paste0(getwd(),"./reports/figures/easin_v_grid10k.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
+
 ```
 
 ```{r Tabel}
