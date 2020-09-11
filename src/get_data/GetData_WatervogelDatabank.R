@@ -23,7 +23,8 @@ getdata_watervogeldatabank <- function(Taxonkey = NA_character_){
                                   [SampleDateKey],
                                   [SeasonKey],
                                   [SampleKey],
-                                  [LocationWVKey]
+                                  [LocationWVKey],
+                                  [TaxonCount]
                           FROM [dbo].[FactTaxonOccurrence]"
   
   if(is.na(Taxonkey)){
@@ -59,7 +60,7 @@ getdata_watervogeldatabank <- function(Taxonkey = NA_character_){
     left_join(dbo_Taxon, by = "TaxonWVKey") %>% 
     left_join(dbo_Sample, by = "SampleKey") %>% 
     left_join(dbo_Date, by = c("SampleDateKey" = "DateKey")) %>% 
-    select(commonname, scientificname, Samplestatus, IsNulTelling, Date, Year, Month)
+    select(commonname, scientificname, Samplestatus, IsNulTelling, Date, Year, Month, TaxonCount, LocationWVKey)
   
   return(output_data)
 }
