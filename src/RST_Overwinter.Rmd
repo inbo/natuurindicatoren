@@ -38,46 +38,42 @@ check <- function(x){tryCatch(if(class(x) == 'logical') 1 else 1, error=function
 ```
 
 ```{r Update data van WatervogelDatabank}
-source(file = "./src/get_data/GetData_WatervogelDatabank.R")
+source(file = "./src/get_data/getdata_watervogeldatabank.R")
 ```
 
 ```{r Read data van WatervogelDatabank}
-
+watervogeldb_data <- getdata_watervogeldatabank(158)
 ```
 
 
-```{r Nieuwe data klaarzetten}
-#dit stuk script filtert de winters die reeds in de oude data aanwezig zijn zodat deze niet worden verdubbeld
-laatste_winter <- Oude_Data[[nrow(Oude_Data), 1]]
-beginJaar_winter <- as.integer(substr(laatste_winter, 0,4))
+```{r data klaarzetten}
+table(data$Month)
+winter_helft1 <- c("October", "November", "December")
+winter_helft2 <- c("January", "February", "March")
 
-Nieuwe_Data2 <- Nieuwe_Data %>% 
-  filter(BeginJaar > beginJaar_winter) %>% 
-  group_by(Winter, Maand) %>% 
-  summarise(maandmaximum = sum(Aantal, na.rm = TRUE)) %>% 
+data <- watervogeldb_data %>% 
+  filter(Samplestatus == "CHECKED") %>% 
+  filter(Year >= 1979) %>% 
+  filter(Month %in% winter_helft1 | Month %in% winter_helft2) %>% 
+  dplyr::mutate("Winter" = case_when(Month %in% winter_helft1 ~ paste0(Year, "-", as.integer(Year) + 1),
+                            Month %in% winter_helft2 ~ paste0(as.integer(Year) - 1 , "-", Year),
+                            TRUE ~ NA_character_)) %>% 
+  group_by(LocationWVKey, Winter, Month) %>% 
+  summarise(maximum = max(TaxonCount, na.rm = TRUE)) %>% 
   ungroup() %>% 
-  spread(Maand, maandmaximum) %>% 
-  mutate(Maximum = apply(X = Nieuwe_Data2[,2:7], MARGIN = 1, FUN = max))
-
-colnames(Nieuwe_Data2) <- colnames(Oude_Data)
-```
-
-```{r Append Nieuwe Data to Oude Data}
-if(check(Nieuwe_Data2)==0){
-  Oude_Data2 <- Oude_Data
-  print("Geen Update")
-}else{
-  Oude_Data2 <- rbind(Oude_Data, Nieuwe_Data2)
-  print(nrow(Nieuwe_Data2))
-  write_delim(Oude_Data2, "data/processed/RST_Aantal_Overwinterend.csv", ";")
-}
+  group_by(Winter, Month) %>% 
+  summarise(sum = sum(maximum)) %>% 
+  ungroup() %>% 
+  group_by(Winter) %>% 
+  summarise(Maximum = max(sum, na.rm = TRUE)) %>% 
+  filter(Winter != "1978-1979")
 ```
 
 ```{r grafiekje}
 talen <- c("NL","EN","DE")
 extensies <- c(".eps", ".jpeg")
 for(taal in talen){
-  p <- ggplot(data = Oude_Data2, aes(x = Winter, y = Maximum))
+  p <- ggplot(data = data, aes(x = Winter, y = Maximum))
   p <- p + geom_col()
   p <- p + scale_x_discrete(NULL)
   p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
