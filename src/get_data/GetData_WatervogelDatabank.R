@@ -1,6 +1,7 @@
-getdata_watervogeldatabank <- function(Taxonkey = 158){
+getdata_watervogeldatabank <- function(Taxonkey = NA_character_){
   require(DBI)
   require(odbc)
+  require(tidyverse)
   
   con <- dbConnect(odbc::odbc(),
                    Driver = "SQL Server Native Client 11.0",
@@ -25,16 +26,21 @@ getdata_watervogeldatabank <- function(Taxonkey = 158){
                                   [LocationWVKey]
                           FROM [dbo].[FactTaxonOccurrence]"
   
-  Query_TaxonOccurence <- Query_TaxonOccurence_base
-   
-   #"WHERE TaxonWVKey = ", Taxonkey")                       
+  if(is.na(Taxonkey)){
+    Query_TaxonOccurence <- Query_TaxonOccurence_base
+    print("alle soorten")
+  }else{
+    Query_TaxonOccurence <- paste0(Query_TaxonOccurence_base, "WHERE TaxonWVKey = ", Taxonkey)
+    print(paste0("enkel ", Taxonkey))
+  }
   
   dbo_TaxonOccurence <- dbGetQuery(con, Query_TaxonOccurence) 
   
-  dbo_Taxon <- dbGetQuery(con, "SELECT [commonname],
-                        [scientificname],
+  dbo_Taxon <- dbGetQuery(con, "SELECT 
                         [TaxonWVKey],
-                        FROM dbo.DimTaxonWV") 
+                        [commonname],
+                        [scientificname]
+                        FROM [dbo].[DimTaxonWV]") 
   
   dbo_Sample <- dbGetQuery(con, "SELECT 
                          [SampleKey],
@@ -49,6 +55,12 @@ getdata_watervogeldatabank <- function(Taxonkey = 158){
                        [Month]
                        FROM dbo.DimDate")
   
+  output_data <- dbo_TaxonOccurence %>% 
+    left_join(dbo_Taxon, by = "TaxonWVKey") %>% 
+    left_join(dbo_Sample, by = "SampleKey") %>% 
+    left_join(dbo_Date, by = c("SampleDateKey" = "DateKey")) %>% 
+    select(commonname, scientificname, Samplestatus, IsNulTelling, Date, Year, Month)
   
+  return(output_data)
 }
 
