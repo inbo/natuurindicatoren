@@ -52,7 +52,21 @@ maxJaar <- year(Sys.Date()) #Hierdoor wordt het lopende jaar niet toegevoegd ter
 WNMBE_Nieuw2 <- WNMBE_Nieuw %>% 
   mutate(Jaar = year(Datum)) %>% 
   filter(Jaar > minJaar & Jaar < maxJaar) %>% 
-  mutate(Maand = month(Datum))
+  mutate(Maand = month(Datum)) %>% 
+  mutate(Gebied = case_when(grepl("IJzervallei", Gebied) ~ "IJzervallei",
+                            TRUE ~ Gebied))
+
+#Waalse waarnemingen
+
+Waalse_WNM <- data.frame()
+
+Waalse_WNM <- Waalse_WNM %>% 
+  mutate(Jaar = c(2019),
+         Maximum_Wal = c(1),
+         Gebieden_Wal = c(1)) %>% 
+  add_row(Jaar = 2019,
+         Maximum_Wal = 1,
+         Gebieden_Wal = 1)
 
 #Bereken het Maximum
 Nieuwe_Data_max_gebied <- WNMBE_Nieuw2 %>% 
@@ -71,7 +85,11 @@ if(nrow(WNMBE_Nieuw2) > 0){
 Nieuwe_Data <- 
   Nieuwe_Data_max_gebied %>% 
   group_by(Jaar) %>% 
-  summarise(Maximum = sum(MaxPerGebied))
+  summarise(Maximum = sum(MaxPerGebied),
+            Gebieden = n_distinct(Gebied))%>% 
+  left_join(Waalse_WNM) %>% 
+  mutate(Maximum_Bel = Maximum + Maximum_Wal,
+         Gebieden_Bel = Gebieden + Gebieden_Wal) 
 
 n_distinct(WNMBE_Nieuw2$Gebied)
 max(WNMBE_Nieuw2$Aantal)
@@ -86,12 +104,13 @@ if(check(WNMBE_Nieuw2)==0){
 }
 ```
 
-```{r}
+```{r grafiek vlaanderen}
 talen <- c("NL","EN","DE")
 extensies <- c(".eps", ".jpeg")
 for(taal in talen){
   p <- ggplot(data = RST_Losse_Observaties2, aes(x = Jaar, y = Maximum))
-  p <- p + geom_col()
+  p <- p + geom_col() +
+    geom_line(aes(x = Jaar, y = Gebieden))
   p <- p + scale_x_continuous(NULL, breaks = seq(2010, max(RST_Losse_Observaties2$Jaar), by = 1))
   p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
   if(taal == "NL"){
@@ -117,3 +136,34 @@ for(taal in talen){
 
 ```
 
+```{r grafiek belgie}
+talen <- c("NL","EN","DE")
+extensies <- c(".eps", ".jpeg")
+for(taal in talen){
+  p <- ggplot(data = RST_Losse_Observaties2, aes(x = Jaar, y = Maximum_Bel))
+  p <- p + geom_col() +
+    geom_line(aes(x = Jaar, y = Gebieden_Bel, colour = "black"), colour = "black", size = 1) 
+  p <- p + scale_x_continuous(NULL, breaks = seq(2011, max(RST_Losse_Observaties2$Jaar), by = 1))
+  p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+  if(taal == "NL"){
+    p <- p + scale_y_continuous("Maandmaximum in België o.b.v. losse waarnemingen",breaks = seq(0, 40, by = 2), limits = c(0,40), expand = c(0,0))
+  }else{
+    if(taal == "EN"){
+      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 40, by = 2), limits = c(0,40),expand = c(0,0))
+    }else{
+      print("WARNING: Translate y-axis!! defaults to english")
+      p <- p + scale_y_continuous("Monthly maximum in Belgium based on individual observations",breaks = seq(0, 400, by = 2), limits = c(0,40),expand = c(0,0))
+    }
+  }
+  p <- p + theme(axis.title.y = element_text(size = 8))
+  p <- p + theme(axis.line.x = element_line(color = "black", size = 0.5, linetype = "solid"))
+  p <- p + theme(axis.line.y = element_line(color = "black", size = 0.5, linetype = "solid"))
+  for(extensie in extensies){
+    fn <- paste0("reports/figures/RST_Maandmaximum_Losse_Observaties_BEL_", taal , extensie)
+    ggsave(fn, p)
+  }
+
+  print(p)
+}
+
+```

@@ -18,6 +18,7 @@ library(leaflet.minicharts)
 library(leaflet.extras)
 library(leafem)
 library(lubridate)
+library(htmlwidgets)
 library(tidyverse)
 ```
 
@@ -26,17 +27,12 @@ crs_wgs <- CRS("+proj=longlat +datum=WGS84 +no_defs ")
 crs_bel <- CRS("+init=epsg:31370")
 ```
 
-```{r}
-Datum <- 230620
-fn <- paste0("data/Raw/Taxon_Rosse_Stekelstaart_", Datum, ".xlsx")
+```{r get data}
+source("./src/get_data/getdata_recorder_rst.r")
 
-Taxon_Rosse_Stekelstaart <- read_excel(fn, 
-                                       col_types = c("text", "text", "text", 
-                                                     "text", "numeric", "numeric", "text", 
-                                                     "text", "numeric", "text", "text", 
-                                                     "text", "text", "text", "numeric", 
-                                                     "text", "text", "text", "text", "text", 
-                                                     "text", "text"))
+Data_Rosse_Stekelstaart <- getdata_recorder_rst()
+
+Taxon_Rosse_Stekelstaart <- Data_Rosse_Stekelstaart$taxon
 ```
 
 ```{r}
@@ -199,6 +195,11 @@ map_samen <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
 print(map_samen)
 
 mapview::mapshot(map_samen, file = paste0(getwd(),"./reports/figures/easin_v_grid10k.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
+
+#Export en move output
+saveWidget(map, file="kaartje_beheersacties.html", selfcontained = TRUE)
+file.copy("./kaartje_beheersacties.html", "./data/processed/kaartje_beheersacties.html")
+file.remove("./kaartje_beheersacties.html")
 
 ```
 
