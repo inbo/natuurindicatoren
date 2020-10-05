@@ -167,3 +167,15 @@ for(taal in talen){
 }
 
 ```
+
+```{r}
+RST_Statistieken <- read_delim("data/processed/RST_Statistieken.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+RST_Statistieken <- RST_Statistieken %>% 
+  mutate(max_losse_wnm = tail(RST_Losse_Observaties2$Maximum, 1),
+         gebied_losse_wnm = tail(RST_Losse_Observaties2$Gebieden, 1))
+
+write_delim(RST_Statistieken,"data/processed/RST_Statistieken.csv", ";")
+```
+
