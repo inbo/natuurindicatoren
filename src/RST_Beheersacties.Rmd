@@ -289,3 +289,18 @@ Tabel[,as.character(year(Sys.Date()))] <- NULL #Drop ongoing year
 write_delim(Tabel, "./data/processed/Beheeracties_Tabel.csv", delim = ";", na = "")
 ```
 
+```{r update statistieken}
+RST_Statistieken <- read_delim("data/processed/RST_Statistieken.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+RST_Statistieken <- RST_Statistieken %>% 
+  mutate(adult_afschot = sum(Tabel[2,as.character(year(Sys.Date())-1)],Tabel[3,as.character(year(Sys.Date())-1)], na.rm = TRUE),
+         juveniel_afschot = sum(Tabel[4,as.character(year(Sys.Date())-1)])) %>% 
+  mutate(adult_afschot = case_when(is.na(adult_afschot)~ 0,
+                                   TRUE ~ adult_afschot),
+         juveniel_afschot = case_when(is.na(juveniel_afschot)~ 0,
+                                   TRUE ~ juveniel_afschot))
+
+write_delim(RST_Statistieken,"data/processed/RST_Statistieken.csv", ";")
+```
+
