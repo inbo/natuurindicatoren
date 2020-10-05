@@ -284,6 +284,8 @@ Tabel$Totaal[6] <- vangst_am_totaal$Totaal
 Tabel$Totaal[7] <- vangst_av_totaal$Totaal
 Tabel$Totaal[8] <- totaal_totaal$Totaal
 
+Tabel[,as.character(year(Sys.Date()))] <- NULL #Drop ongoing year
+
 write_delim(Tabel, "./data/processed/Beheeracties_Tabel.csv", delim = ";", na = "")
 ```
 
