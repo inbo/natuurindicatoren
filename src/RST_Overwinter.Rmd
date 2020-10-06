@@ -5,7 +5,7 @@ date: "23 juli 2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup overwinter, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
