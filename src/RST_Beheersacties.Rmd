@@ -2,10 +2,12 @@
 title: "RST_Beheersacties"
 author: "Sander Devisscher, Tim Adriaens"
 date: "25 juli 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r setup beheer, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -22,7 +24,7 @@ library(htmlwidgets)
 library(tidyverse)
 ```
 
-```{r stel crs'en in}
+```{r stel crs in}
 crs_wgs <- CRS("+proj=longlat +datum=WGS84 +no_defs ")
 crs_bel <- CRS("+init=epsg:31370")
 ```
@@ -294,12 +296,8 @@ RST_Statistieken <- read_delim("data/processed/RST_Statistieken.csv",
     ";", escape_double = FALSE, trim_ws = TRUE)
 
 RST_Statistieken <- RST_Statistieken %>% 
-  mutate(adult_afschot = sum(Tabel[2,as.character(year(Sys.Date())-1)],Tabel[3,as.character(year(Sys.Date())-1)], na.rm = TRUE),
-         juveniel_afschot = sum(Tabel[4,as.character(year(Sys.Date())-1)])) %>% 
-  mutate(adult_afschot = case_when(is.na(adult_afschot)~ 0,
-                                   TRUE ~ adult_afschot),
-         juveniel_afschot = case_when(is.na(juveniel_afschot)~ 0,
-                                   TRUE ~ juveniel_afschot))
+  mutate(adult_afschot = sum(Tabel[2,ncol(Tabel)],Tabel[3,ncol(Tabel)], na.rm = TRUE),
+         juveniel_afschot = sum(Tabel[4,ncol(Tabel)], na.rm = TRUE)) 
 
 write_delim(RST_Statistieken,"data/processed/RST_Statistieken.csv", ";")
 ```
