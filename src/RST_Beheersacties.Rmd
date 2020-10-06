@@ -206,7 +206,7 @@ file.remove("./kaartje_beheersacties.html")
 ```
 
 ```{r Tabel}
-Jaren <- c("", 2009:max(Taxon_Rosse_Stekelstaart_int$Year))
+Jaren <- c(as.character(2009:max(Taxon_Rosse_Stekelstaart_int$Year)))
 
 Tabel <- data.frame(matrix(NA, nrow = 8, ncol = length(Jaren)))
 
@@ -244,27 +244,36 @@ vangst_av <- Taxon_Rosse_Stekelstaart_int %>%
   summarise(Aantal = sum(as.numeric(Taxon_Data))) %>% 
   right_join(y = temp)
 totaal <- Taxon_Rosse_Stekelstaart_int %>% 
+  filter(!grepl(pattern = "Niet", Taxon_MeasurementQualifier)) %>% 
   group_by(Year) %>% 
-  summarise(Aantal = sum(as.numeric(Taxon_Data))) %>% 
+  summarise(Aantal = sum(as.numeric(Taxon_Data), na.rm = TRUE)) %>% 
   right_join(y = temp)
 
-Tabel[2,] <- afschot_am$Aantal
-Tabel[3,] <- afschot_av$Aantal
-Tabel[4,] <- afschot_juv$Aantal
-Tabel[6,] <- vangst_am$Aantal
-Tabel[7,] <- vangst_av$Aantal
-Tabel[8,] <- totaal$Aantal
+for(j in Jaren){
+  j <- as.character(j)
+  Tabel[[j]] <- c(NA, 
+                  afschot_am$Aantal[afschot_am$Year == j], 
+                  afschot_av$Aantal[afschot_av$Year == j],
+                  afschot_juv$Aantal[afschot_juv$Year == j],
+                  NA, 
+                  vangst_am$Aantal[vangst_am$Year == j],
+                  vangst_av$Aantal[vangst_av$Year == j],
+                  totaal$Aantal[totaal$Year == j])
+}
 
-Tabel[1,1] <- "Afschot"
-Tabel[2,1] <- "Adult Man"
-Tabel[3,1] <- "Adult Vrouw"
-Tabel[4,1] <- "Subadult/Pullus"
-Tabel[5,1] <- "Vangst"
-Tabel[6,1] <- "Adult man"
-Tabel[7,1] <- "Adult vrouw"
-Tabel[8,1] <- "Totaal"
+Tabel["X"] <- c("Afschot",
+              "Adult Man",
+              "Adult Vrouw",
+              "Subadult/Pullus",
+              "Vangst",
+              "Adult man",
+              "Adult vrouw",
+              "Totaal")
 
 Tabel$Totaal <- NA
+
+Tabel <- Tabel %>% 
+  select("X", Jaren, "Totaal")
 
 afschot_am_totaal <- afschot_am %>% 
   summarise(Totaal = sum(Aantal, na.rm = TRUE))
@@ -286,7 +295,7 @@ Tabel$Totaal[6] <- vangst_am_totaal$Totaal
 Tabel$Totaal[7] <- vangst_av_totaal$Totaal
 Tabel$Totaal[8] <- totaal_totaal$Totaal
 
-Tabel[,as.character(year(Sys.Date()))] <- NULL #Drop ongoing year
+#Tabel[,as.character(year(Sys.Date()))] <- NULL #Drop ongoing year
 
 write_delim(Tabel, "./data/processed/Beheeracties_Tabel.csv", delim = ";", na = "")
 ```
