@@ -99,7 +99,7 @@ In het wild levende uitheemse rosse stekelstaarten vormen een bedreiging voor de
 Natuurpunt, Hubertusvereniging Vlaanderen, Vogelbescherming Vlaanderen, Aviornis International en de Vlaamse overheid (ANB en INBO) werkten in 2011 een plan uit voor de bestrijding van rosse stekelstaart in Vlaanderen (Agentschap voor Natuur en Bos 2011, Adriaens en D’hondt 2017). Voorheen werden broedgevallen lokaal aangepakt door terreinbeheerders. In 2012 werden voor het eerst gecoördineerde acties opgezet waarbij vogels bestreden worden onder coördinatie van ANB en INBO. De verwachting is dat het aantal rosse stekelstaarten in Vlaanderen zal afnemen naarmate deze acties volgehouden worden en de inspanningen in de ons omringende landen verder gezet worden (Robertson et al. 2015).
 
 In de periode `r management_period` werden in totaal in Vlaanderen `r RST_Statistieken$adult_afschot` volwassen en `r RST_Statistieken$juveniel_afschot` juveniele vogels/pulli bestreden via afschot. Er werden ook enkele kweekvogels weggevangen.
-Zie ook het interactieve kaartje op <http://rpubs.com/SanderDevisscher/test>
+Zie ook het interactieve kaartje op <https://rpubs.com/SanderDevisscher/Ruddy_Duck_Management_Flanders>
 
 ## Trends
 **Geen relevante trendbepaling mogelijk**
