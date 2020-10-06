@@ -155,7 +155,11 @@ map_split <- leaflet(Taxon_Rosse_Stekelstaart_sp) %>%
 
 print(map_split)
 
-mapview::mapshot(map_split, file = paste0(getwd(),"./reports/figures/easin_v_grid10k_split.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
+mapview::mapshot(map_split, file = paste0(getwd(),"./reports/figures/RST_Beheer_split.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
+
+saveWidget(map_split, file="kaartje_beheersacties_split.html", selfcontained = TRUE)
+file.copy("./kaartje_beheersacties_split.html", "./data/processed/kaartje_beheersacties_split.html")
+file.remove("./kaartje_beheersacties_split.html")
 ```
 
 ```{r Kaartjes: alle acties samen, eval = FALSE}
@@ -199,7 +203,7 @@ print(map_samen)
 mapview::mapshot(map_samen, file = paste0(getwd(),"./reports/figures/easin_v_grid10k.jpeg"), remove_controls = c("zoomControl", "layersControl", "homeButton"), remove_url = TRUE)
 
 #Export en move output
-saveWidget(map, file="kaartje_beheersacties.html", selfcontained = TRUE)
+saveWidget(map_samen, file="kaartje_beheersacties.html", selfcontained = TRUE)
 file.copy("./kaartje_beheersacties.html", "./data/processed/kaartje_beheersacties.html")
 file.remove("./kaartje_beheersacties.html")
 
