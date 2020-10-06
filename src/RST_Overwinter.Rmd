@@ -5,7 +5,7 @@ date: "23 juli 2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup overwinter, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -44,7 +44,6 @@ source(file = "./src/get_data/getdata_watervogeldatabank.R")
 ```{r Read data van WatervogelDatabank}
 watervogeldb_data <- getdata_watervogeldatabank(158)
 ```
-
 
 ```{r data klaarzetten}
 table(data$Month)
@@ -96,8 +95,27 @@ for(taal in talen){
 
   print(p)
 }
+```
 
+```{r}
+RST_Statistieken <- read_delim("data/processed/RST_Statistieken.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
 
+n_gebieden <- watervogeldb_data %>% 
+  filter(Samplestatus == "CHECKED") %>% 
+  filter(Year >= 1979) %>% 
+  filter(Month %in% winter_helft1 | Month %in% winter_helft2) %>% 
+  dplyr::mutate("Winter" = case_when(Month %in% winter_helft1 ~ paste0(Year, "-", as.integer(Year) + 1),
+                            Month %in% winter_helft2 ~ paste0(as.integer(Year) - 1 , "-", Year),
+                            TRUE ~ NA_character_)) %>% 
+  filter(TaxonCount > 0) %>% 
+  group_by(Winter) %>% 
+  summarise(gebieden_wintertelling = n_distinct(LocationWVKey))
 
+RST_Statistieken <- RST_Statistieken %>% 
+  mutate(max_wintertelling = tail(data$Maximum, 1),
+         gebied_wintertelling = tail(n_gebieden$gebieden_wintertelling, 1))
+
+write_delim(RST_Statistieken,"data/processed/RST_Statistieken.csv", ";")
 ```
 

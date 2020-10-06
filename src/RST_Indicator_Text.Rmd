@@ -1,0 +1,112 @@
+---
+title: "RST_Indicator_Text"
+author: "Sander Devisscher, Tim Adriaens"
+date: "`r format(Sys.Date())`"
+output:
+  word_document: default
+---
+
+```{r setup text, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries, include=FALSE}
+library(rmarkdown)
+library(lubridate)
+library(tidyverse)
+```
+
+```{r update data, include=FALSE, eval=FALSE}
+#voorlopig disabled wegens error
+#Deze renders zouden normaal gezien de grafieken en data moeten updaten zodat 
+#alles geupdated kan worden vanuit dit script
+render("./src/RST_Beheersacties.Rmd")
+render("./src/RST_Losse_Observaties.Rmd")
+render("./src/RST_Overwinter.Rmd")
+```
+
+```{r get statistieken data, include=FALSE}
+RST_Statistieken <- read_delim("data/processed/RST_Statistieken.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r translate values below 10, include=FALSE}
+valuetext <- function(value){
+  if(value == 0){ 
+    value <- "nul"
+  }
+  if(value == 1){ 
+    value <- "één"
+  }
+  if(value == 2){ 
+    value <- "twee"
+  }
+  if(value == 3){ 
+    value <- "drie"
+  }
+  if(value == 4){ 
+    value <- "vier"
+  }
+  if(value == 5){ 
+    value <- "vijf"
+  }
+  if(value == 6){ 
+    value <- "zes"
+  }
+  if(value == 7){ 
+    value <- "zeven"
+  }
+  if(value == 8){ 
+    value <- "acht"
+  }
+  if(value == 9){ 
+    value <- "negen"
+  }
+  if(value == 10){ 
+    value <- "tien"
+  }
+  return(value)
+}
+
+RST_Statistieken <- RST_Statistieken %>% 
+  mutate(max_wintertelling = valuetext(max_wintertelling),
+         gebied_wintertelling = valuetext(gebied_wintertelling),
+         max_losse_wnm = valuetext(max_losse_wnm),
+         gebied_losse_wnm = valuetext(gebied_losse_wnm))
+```
+
+```{r other dynamic values, include=FALSE}
+last_winter <- paste(year(Sys.Date())-1, year(Sys.Date()), sep = "-")
+management_period <- paste(2009, year(Sys.Date()), sep = "-")
+
+gebied_wintertelling <- case_when(RST_Statistieken$gebied_wintertelling == "één" ~ "gebied",
+                                  TRUE ~ "gebieden")
+gebied_losse_wnm <- case_when(RST_Statistieken$gebied_losse_wnm == "één" ~ "gebied",
+                                  TRUE ~ "gebieden")
+vogels_winter <- case_when(RST_Statistieken$max_wintertelling == "één" ~ "vogel",
+                           RST_Statistieken$max_wintertelling == "nul" ~ "vogels",
+                                  TRUE ~ "verschillende vogels")
+```
+
+# Aantal rosse stekelstaarten in Vlaanderen.
+Tijdens de mid-maandelijkse watervogeltellingen in de winter van `r last_winter` werden in Vlaanderen maximaal `r RST_Statistieken$max_wintertelling` `r vogels_winter`  geteld verspreid over `r RST_Statistieken$gebied_wintertelling` `r gebied_wintertelling`. Naar schatting zijn dus in Vlaanderen in de winter nog slechts een handvol vogels aanwezig als gevolg van een volgehouden beheer. Op basis van losse waarnemingen werd een maandmaximum van `r RST_Statistieken$max_losse_wnm` waargenomen vogels berekend verspreid over `r RST_Statistieken$gebied_losse_wnm` `r gebied_losse_wnm`. Er werden in 2018 ook twee jonge vogels geschoten wat een broedgeval doet vermoeden.
+
+## Definitie
+De indicator toont het aantal overwinterende rosse stekelstaarten in Vlaanderen sinds 1979 berekend op basis van de midmaandelijkse watervogeltellingen (tellingen oktober-maart) en het maandmaximum van het aantal waargenomen vogels in Vlaanderen. Dat maandmaximum wordt berekend als de som van de maxima per maand en per gebied. Daarnaast geven we ook een overzicht van het aantal bestreden vogels.
+
+## Bespreking
+In het wild levende uitheemse rosse stekelstaarten vormen een bedreiging voor de instandhouding van de internationaal bedreigde inheemse witkopeend (_Oxyura leucocephala_) (Munoz-Fuentes et al. 2006, 2007; Rhymer & Simberloff, 1996 ; Kumschick & Nentwig, 2010). De Conventie van Bern stelde daarom als doel om rosse stekelstaart uit te roeien in het wild in Europa en Noord-Afrika tegen 2015 (Hughes 2006, Cranswick & Hall 2010). Als subdoel gold een jaarlijkse reductie van 50% van het aantal overwinterende vogels. Deze aanbeveling werd vastgelegd in internationale verdragen (Conventie van Bern - Recommendation No. 149 (2010), AEWA, Vogelrichtlijn). In het Verenigd Koninkrijk, waar de grootste populatie in Europa zich ophield, werd de soort intensief bestreden (Henderson, 2006; Henderson, 2010). In 2005 werd hier een Life project opgestart, wat tot een populatiereductie van 98% leidde in 2013. Ten gevolge van deze en acties in andere Europese landen werd de Europese populatie ondertussen gereduceerd tot minder dan 7% van die in 2000 (Robertson et al. 2015). De doelstelling werd van het eerste actieplan (2011-2015) werd gehaald in de UK en Spanje, maar nog niet in Nederland, België en Frankrijk waar nog vogels aanwezig zijn (Hall 2016). Het plan werd daarom gereviseerd (Hall 2016) en verlengd tot 2020 (Bern Conventie 2016). In Frankrijk, waar de grootste populatie zich momenteel ophoudt, loopt momenteel (2018-2023) een Life+ project (Oxyura against Oxyura) met als doel rosse stekelstaarten uit het wild te verwijderen.
+Natuurpunt, Hubertusvereniging Vlaanderen, Vogelbescherming Vlaanderen, Aviornis International en de Vlaamse overheid (ANB en INBO) werkten in 2011 een plan uit voor de bestrijding van rosse stekelstaart in Vlaanderen (Agentschap voor Natuur en Bos 2011, Adriaens en D’hondt 2017). Voorheen werden broedgevallen lokaal aangepakt door terreinbeheerders. In 2012 werden voor het eerst gecoördineerde acties opgezet waarbij vogels bestreden worden onder coördinatie van ANB en INBO. De verwachting is dat het aantal rosse stekelstaarten in Vlaanderen zal afnemen naarmate deze acties volgehouden worden en de inspanningen in de ons omringende landen verder gezet worden (Robertson et al. 2015).
+
+In de periode `r management_period` werden in totaal in Vlaanderen `r RST_Statistieken$adult_afschot` volwassen en `r RST_Statistieken$juveniel_afschot` juveniele vogels/pulli bestreden via afschot. Er werden ook enkele kweekvogels weggevangen.
+Zie ook het interactieve kaartje op <https://rpubs.com/SanderDevisscher/Ruddy_Duck_Management_Flanders>
+
+## Trends
+**Geen relevante trendbepaling mogelijk**
+
+## Beleidsdoelen
+
+  * Streefdoel 5 EU 2020 biodiversiteitsstrategie:Tegen 2020 zijn invasieve uitheemse soorten en hun introductiemechanismen in kaart gebracht en is de prioriteit ervan bepaald, worden prioritaire soorten in de hand gehouden of uitgeroeid en worden hun routes beheerd om de introductie en vestiging van nieuwe invasieve uitheemse soorten te voorkomen.
+
+
+
